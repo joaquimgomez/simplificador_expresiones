@@ -50,11 +50,11 @@ class token {
       /* Post: indica si el token és una variable */
 
     int to_int() const;
-      /* Pre: un token número enter */
+      /* Pre: un token que sigui un número enter */
       /* Post: donat un token número enter retorna el valor enter */
 
     bool to_bool() const;
-      /* Pre: un token booleà */
+      /* Pre: un token que sigui booleà */
       /* Post: donat un token booleà retorna el valor booleà true o false */
 
     string to_string() const;
