@@ -20,6 +20,7 @@ token::token(bool b){
 
   if (b)  t = "T";
   else  t = "F";
+
 }
 
 token::token(string s){
@@ -78,13 +79,15 @@ bool token::es_variable() const{
 
   return t >= 'a' and t <= 'z';
 
+  // PRIMER CARACTER SIEMPRE ES LETRA?
+
 }
 
 int token::to_int() const{
   /* Pre: cert */
   /* Post: donat un token número enter retorna el valor enter */
 
-
+  return stoi(t);
 
 }
 

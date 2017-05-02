@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+using namespace std;
 
 class token {
   /* Un "token" guarda la informació de l'element d'una expressió com un string. */
