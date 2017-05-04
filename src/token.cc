@@ -69,9 +69,10 @@ bool token::es_enter() const{
   /* Pre: cert */
   /* Post: indica si el token és una constant entera */
 
-  return t != "T" and t != "F" and not (t[0] >= 'a' and t[0] <= 'z') and not (t[0] >= 'A' and t[0] <= 'Z')
+  return t[0] >= '0' and t[0] <= '9';
+  /*return t != "T" and t != "F" and not (t[0] >= 'a' and t[0] <= 'z') and not (t[0] >= 'A' and t[0] <= 'Z')
          and t != "or" and t != "not" and t != "and" and t != "!=" and t != "==" and t != "+" and t != "-"
-         and t != "*" and t != "**" and t != "/";
+         and t != "*" and t != "**" and t != "/"; */
 
 }
 
