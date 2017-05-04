@@ -2,8 +2,10 @@
 #include <iostream>
 using namespace std;
 
-class token {
-  /* Un "token" guarda la informació de l'element d'una expressió com un string. */
+class token{
+  /* Tipus de modul: dades.
+     Descripció del tipus: guarda la informació de l'element
+                           d'una expressió com un string.*/
 
   private:
 
@@ -78,11 +80,11 @@ class token {
       /* Pre: cert */
       /* Post: indica si el token del p.i. és diferent al string s */
 
-    friend istream& operator>>(istream& is, token &t);
+    friend istream& operator>>(istream &is, token &t);
       /* Pre: cert */
       /* Post: llegeix del canal d'entrada el contingut del token */
 
-    friend ostream operator<<(ostream& os, const token &t);
+    friend ostream& operator<<(ostream &os, const token &t);
       /* Pre: cert*/
       /* Post: mostra al canal de sortida el contingut del token */
 

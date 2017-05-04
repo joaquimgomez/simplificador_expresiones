@@ -1,3 +1,5 @@
+#include "token.h"
+
 token::token(){
   /* Pre: cert */
   /* Post: crea un token enter de valor 0 */
@@ -10,7 +12,7 @@ token::token(int i){
   /* Pre: cert */
   /* Post: crea un token a partir de l'enter i */
 
-  t = i;
+  t = ::to_string(i);
 
 }
 
@@ -27,7 +29,7 @@ token::token(string s){
   /* Pre: cert */
   /* Post: crea un token a partir del string s (un operador o una variable) */
 
-  t = s:
+  t = s;
 
 }
 
@@ -35,7 +37,7 @@ bool token::es_operador_unari() const{
   /* Pre: cert */
   /* Post: indica si el token és un operador unari */
 
-  return t == 'not';
+  return t == "not";
 
 }
 
@@ -43,7 +45,7 @@ bool token::es_operador_binari() const{
   /* Pre: cert */
   /* Post: indica si el token és un operador binari */
 
-  return t == 'or' or t == 'and' or t == '==' or t == '!=' or t == '+' or t == '-' or t == '/' or t == '*' or t == '**';
+  return t == "or" or t == "and" or t == "==" or t == "!=" or t == "+" or t == "-" or t == "/" or t == "*" or t == "**";
 
 }
 
@@ -51,7 +53,7 @@ bool token::es_operador_commutatiu() const{
   /* Pre: cert */
   /* Post: indica si el token és un operador commutatiu */
 
-  return t == 'or' or t == 'and' or t == '==' or t == '!=' or t == '+' or t == '*';
+  return t == "or" or t == "and" or t == "==" or t == "!=" or t == "+" or t == "*";
 
 }
 
@@ -67,9 +69,9 @@ bool token::es_enter() const{
   /* Pre: cert */
   /* Post: indica si el token és una constant entera */
 
-  return t != "T" and t != "F" and not (t >= 'a' and t <= 'z') and t != "or"
-         and t != "not" and t != "and" and t != "!=" and t != "==" and t != "+"
-         and t != "-" and t != "*" and t != "**" and t != "/";
+  return t != "T" and t != "F" and not (t[0] >= 'a' and t[0] <= 'z') and not (t[0] >= 'A' and t[0] <= 'Z')
+         and t != "or" and t != "not" and t != "and" and t != "!=" and t != "==" and t != "+" and t != "-"
+         and t != "*" and t != "**" and t != "/";
 
 }
 
@@ -77,9 +79,7 @@ bool token::es_variable() const{
   /* Pre: cert */
   /* Post: indica si el token és una variable */
 
-  return t >= 'a' and t <= 'z';
-
-  // PRIMER CARACTER SIEMPRE ES LETRA?
+  return t != "T" and t != "F" and t != "and" and t!= "or" and t != "not" and ((t[0] >= 'a' and t[0] <= 'z') or (t[0] >= 'A' and t[0] <= 'Z'));
 
 }
 
@@ -107,11 +107,11 @@ string token::to_string() const{
 
 }
 
-bool token::operator==(const token &t) const}{
+bool token::operator==(const token &t) const{
   /* Pre: cert */
   /* Post: indica si el token del p.i. és igual al token t */
 
-  return t == this->t;
+  return t.t == this->t;
 
 }
 
@@ -119,7 +119,7 @@ bool token::operator!=(const token &t) const{
   /* Pre: cert*/
   /* Post: indica si el token del p.i. és diferent al token t */
 
-  return t != this->t;
+  return t.t != this->t;
 
 }
 
@@ -139,20 +139,20 @@ bool token::operator!=(const char s[]) const{
 
 }
 
-friend istream& operator>>(istream& is, token &t){
+istream& operator>>(istream &is, token &t){
   /* Pre: cert */
   /* Post: llegeix del canal d'entrada el contingut del token */
 
-  is >> t;
+  is >> t.t;
   return is;
 
 }
 
-friend ostream operator<<(ostream& os, const token &t){
+ostream& operator<<(ostream &os, const token &t){
   /* Pre: cert*/
   /* Post: mostra al canal de sortida el contingut del token */
 
-  os << t;
+  os << t.t;
   return os;
 
 }
