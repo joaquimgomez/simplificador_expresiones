@@ -1,4 +1,4 @@
-#ifndef ARBRE_H 
+#ifndef ARBRE_H
 #define ARBRE_H
 
 #include <string>
@@ -8,13 +8,13 @@
 
 /// -----------------------------------------
 ///
-///  DeclaraciÛ operacions tipus ARBRE BINARI
+///  Declaraci√≥ operacions tipus ARBRE BINARI
 ///
 /// -----------------------------------------
 
-template <class T> 
-class arbre { 
- 
+template <class T>
+class arbre {
+
  private:
    T info;
    arbre<T> *dret;
@@ -25,49 +25,49 @@ class arbre {
    //constructors
    arbre();
    /* Pre: cert */
-   /* Post: el resultat Ès un arbre sense cap element */
+   /* Post: el resultat √©s un arbre sense cap element */
    arbre(const T &,const arbre<T> &,const arbre<T> &);
     /* Pre: cert */
-    /* Post: el resultat Ès un arbre amb un element i dos 
+    /* Post: el resultat √©s un arbre amb un element i dos
        subarbres */
    arbre(const arbre<T> &);
    /* Pre: cert */
-   /* Post: el resultat Ès una cÚpia de l'arbre rebut */
-    
-    
-   //destructor: esborra autom‡ticament els objectes locals
-   //en sortir d'un ‡mbit de visibilitat
+   /* Post: el resultat √©s una c√≥pia de l'arbre rebut */
+
+
+   //destructor: esborra autom√†ticament els objectes locals
+   //en sortir d'un √†mbit de visibilitat
    ~arbre();
-    
-    
+
+
     //modificadors
     void a_buit();
     /* Pre: cert */
-    /* Post: el par‡metre implÌcit no tÈ cap element */     
-    arbre<T>& operator=(const arbre<T>&);  
+    /* Post: el par√†metre impl√≠cit no t√© cap element */
+    arbre<T>& operator=(const arbre<T>&);
     /* Pre: cert */
-    /* Post: operaciÛ d'assignaciÛ d'arbres  */ 
-       
+    /* Post: operaci√≥ d'assignaci√≥ d'arbres  */
+
    //consultors
    const T& arrel() const;
-   /* Pre: el par‡metre implÌcit no Ès buit */
-   /* Post: el resultat Ès líarrel del par‡metre implÌcit */
+   /* Pre: el par√†metre impl√≠cit no √©s buit */
+   /* Post: el resultat √©s l'arrel del par√†metre impl√≠cit */
    const arbre<T>& fd() const;
-   /* Pre: el par‡metre implÌcit no Ès buit */
-   /* Post: el resultat Ès el fill dret del p.i. original */
+   /* Pre: el par√†metre impl√≠cit no √©s buit */
+   /* Post: el resultat √©s el fill dret del p.i. original */
    const arbre<T>& fe() const;
-   /* Pre: el par‡metre implÌcit no Ès buit */
-   /* Post: el resultat Ès el fill esquerre del p.i. original */
+   /* Pre: el par√†metre impl√≠cit no √©s buit */
+   /* Post: el resultat √©s el fill esquerre del p.i. original */
    bool es_buit() const;
    /* Pre: cert */
-   /* Post: el resultat indica si el p.i. Ès buit o no */
-   
+   /* Post: el resultat indica si el p.i. √©s buit o no */
+
 };
 
 
 /// ------------------------------------------
 ///
-///  CodificaciÛ operacions tipus ARBRE BINARI
+///  Codificaci√≥ operacions tipus ARBRE BINARI
 ///
 /// ------------------------------------------
 
@@ -76,7 +76,7 @@ class arbre {
 template <class T>
 arbre<T>::arbre()
 /* Pre: cert */
-/* Post: el resultat Ès un arbre sense cap element */
+/* Post: el resultat √©s un arbre sense cap element */
 {
   dret = NULL;
   esquerre = NULL;
@@ -85,7 +85,7 @@ arbre<T>::arbre()
 template <class T>
 arbre<T>::arbre(const arbre<T>& t)
 /* Pre: cert */
-/* Post: el resultat Ès una cÚpia de t */
+/* Post: el resultat √©s una c√≤pia de t */
 {
   clone(t);
 }
@@ -93,7 +93,7 @@ arbre<T>::arbre(const arbre<T>& t)
 template <class T>
 arbre<T>::arbre(const T& x, const arbre<T>& a1, const arbre<T>& a2)
 /* Pre: cert */
-/* Post: el resultat Ès un arbre amb x com arrel, a1 com a fill
+/* Post: el resultat √©s un arbre amb x com arrel, a1 com a fill
 esquerre i a2 com a fill dret */
 {
   info = x;
@@ -115,11 +115,11 @@ arbre<T>::~arbre() {
 template <class T>
 void arbre<T>::a_buit()
 /* Pre: cert */
-/* Post: el par‡metre implÌcit no tÈ cap element */  
+/* Post: el par√†metre impl√≠cit no t√© cap element */
 {
   if (dret != NULL) dret = NULL;
   if (esquerre != NULL) esquerre = NULL;
-}  
+}
 
 template <class T>
 arbre<T>& arbre<T>::operator=(const arbre<T>& t) {
@@ -133,18 +133,18 @@ arbre<T>& arbre<T>::operator=(const arbre<T>& t) {
 template <class T>
 bool arbre<T>::es_buit() const
 /* Pre: cert */
-/* Post: el resultat indica si el p.i. Ès buit o no */
+/* Post: el resultat indica si el p.i. √©s buit o no */
 {
   return (dret==NULL && esquerre==NULL);
-} 
+}
 
 template <class T>
 const arbre<T> &  arbre<T>::fd() const
-/* Pre: el par‡metre implÌcit no Ès buit */
-/* Post: el resultat Ès el fill dret del p.i. original */
+/* Pre: el par√†metre impl√≠cit no √©s buit */
+/* Post: el resultat √©s el fill dret del p.i. original */
 {
   if (this->es_buit()) {
-    std::cout<<"ERROR - OperaciÛ 'fd' sobre un arbre buit."<<std::endl;
+    std::cout<<"ERROR - Operaci√≥ 'fd' sobre un arbre buit."<<std::endl;
     exit(1);
   }
   return (*dret);
@@ -152,11 +152,11 @@ const arbre<T> &  arbre<T>::fd() const
 
 template <class T>
 const arbre<T> &  arbre<T>::fe() const
-/* Pre: el par‡metre implÌcit no Ès buit */
-/* Post: el resultat Ès el fill esquerre del p.i. original */
+/* Pre: el par√†metre impl√≠cit no √©s buit */
+/* Post: el resultat √©s el fill esquerre del p.i. original */
 {
   if (this->es_buit()) {
-    std::cout<<"ERROR - OperaciÛ 'fe' sobre un arbre buit."<<std::endl;
+    std::cout<<"ERROR - Operaci√≥ 'fe' sobre un arbre buit."<<std::endl;
     exit(1);
   }
   return (*esquerre);
@@ -164,44 +164,33 @@ const arbre<T> &  arbre<T>::fe() const
 
 template <class T>
 const T& arbre<T>::arrel() const {
-/* Pre: el par‡metre implÌcit no Ès buit */
-/* Post: el resultat Ès líarrel del par‡metre implÌcit */
+/* Pre: el par√†metre impl√≠cit no √©s buit */
+/* Post: el resultat √©s l'arrel del par√†metre impl√≠cit */
   if (this->es_buit()) {
-    std::cout<<"ERROR - OperaciÛ 'arrel' sobre un arbre buit."<<std::endl;
+    std::cout<<"ERROR - Operaci√≥ 'arrel' sobre un arbre buit."<<std::endl;
     exit(1);
   }
   return info;
 }
 
-//clone (operaciÛ auxiliar privada) ----------------------
+//clone (operaci√≥ auxiliar privada) ----------------------
 template <class T>
 void arbre<T>::clone(const arbre<T>& t) {
 
   if (not t.es_buit()) this->info = t.info;
 
   if (t.dret!=NULL) {
-    this->dret = new arbre<T>;  
-    this->dret->clone(*t.dret); 
+    this->dret = new arbre<T>;
+    this->dret->clone(*t.dret);
   }
   else this->dret=NULL;
 
   if (t.esquerre!=NULL) {
     this->esquerre = new arbre<T>;
-    this->esquerre->clone(*t.esquerre);  
+    this->esquerre->clone(*t.esquerre);
   }
   else this->esquerre=NULL;
 
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
