@@ -8,6 +8,8 @@ int main(){
 
   int i = 0;
   while (cin >> t){
+    /* Inv: */
+    
     cout << "=============================" << endl;
     cout << "TOKEN: " << t << endl;
     cout << "És un operador unari: " << t.es_operador_unari() << endl;
