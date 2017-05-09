@@ -4,6 +4,7 @@
 #include <list>
 #include "arbre.h"
 #include "token.h"
+#include "expressions.h"
 using namespace std;
 
 
@@ -196,4 +197,28 @@ arbre<token> simplificar(arbre<token> a){
   /* Pre: a = A */
   /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
+}
+
+
+
+int main(){
+  
+  arbre<token> a;
+  
+  string s;
+  while(getline(cin, s)){
+    istringstream ss(s);
+    string tipus;
+    ss >> tipus;
+    if (tipus == "PREFIXA"){
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
