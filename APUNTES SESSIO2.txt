@@ -25,15 +25,15 @@ expressions.in
 
 PREFIXA and a or b not and T a -> INFIXA
 
-	and
-       '  `
-      a   or 
-	 ' `
-	b  not
-	   ' `
-         buit  and
-	       ' `
-	       T  a
+	and										 and
+       '  `										 ' `
+      a   or 									        a   or
+	 ' `										    ' `
+	b  not			TAMBÉ ES POT POSAR EL BUIT A LA DRETA :			   b   not
+	   ' `										       '  `
+         buit  and									     and    buit
+	       ' `									     '  `
+	       T  a									     T   a
 
 RECORREGUT inordre (INFIXA) : a and b or not T and a 	
 
