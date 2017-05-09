@@ -7,7 +7,7 @@
 using namespace std;
 
 
-string ExpressioPrefixa(arbre<token> a){
+string expressio_prefixa(arbre<token> a){
 
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació prefixa */
@@ -39,7 +39,7 @@ string ExpressioPrefixa(arbre<token> a){
 
 }
 
-string ExpressioPostfixa(arbre<token> a){
+string expressio_postfixa(arbre<token> a){
 
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació postfixa */
@@ -73,7 +73,7 @@ string ExpressioPostfixa(arbre<token> a){
 
 }
 
-string ExpressioInfixa(arbre<token> a){
+string expressio_infixa(arbre<token> a){
 
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació infixa */
@@ -100,7 +100,7 @@ string ExpressioInfixa(arbre<token> a){
 
 }
 
-arbre<token> LlegirPrefixa(){
+arbre<token> llegir_prefixa(){
 
   /* Pre: cert */
   /* Post: retorna un arbre amb l'expressió en notació prefixa rebuda pel canal
@@ -117,7 +117,7 @@ arbre<token> LlegirPrefixa(){
 
 }
 
-arbre<token> LlegirPostfixa(){
+arbre<token> llegir_postfixa(){
 
   /* Pre: cert */
   /* Post: retorna un arbre amb l'expressió en notació postfixa rebuda pel canal
@@ -148,7 +148,7 @@ arbre<token> LlegirPostfixa(){
 
 }
 
-arbre<token> LlegirInfixa(){
+arbre<token> llegir_infixa(){
 
   /* Pre: cert */
   /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
@@ -166,34 +166,34 @@ bool equivalents(arbre<token> a, arbre<token> b){
 arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
   /* Pre: op = OP, b = B */
-  /* Post: */
+  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
 }
 
 arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
 
   /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: */
+  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
 }
 
 arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<token> b2){
 
   /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: */
+  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
 }
 
 arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<token> b2){
 
   /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: */
+  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
 }
 
 arbre<token> simplificar(arbre<token> a){
 
   /* Pre: a = A */
-  /* Post: */
+  /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
 }
