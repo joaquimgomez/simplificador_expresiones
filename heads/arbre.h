@@ -30,6 +30,10 @@ class arbre {
     /* Pre: cert */
     /* Post: el resultat és un arbre amb un element i dos
        subarbres */
+   arbre(const T &);
+    /* Pre: cert */
+    /* Post: el resultat és un arbre amb un element i dos 
+       subarbres buits*/
    arbre(const arbre<T> &);
    /* Pre: cert */
    /* Post: el resultat és una cópia de l'arbre rebut */
@@ -191,6 +195,26 @@ void arbre<T>::clone(const arbre<T>& t) {
   }
   else this->esquerre=NULL;
 
+}
+
+//Escriptura
+std::string dep=""; 
+template <class U>
+std::ostream& operator<<(std::ostream& os , const arbre<U> &x) 
+{
+  std::string d1=dep;
+  if (x.es_buit()) 
+    os<<".";
+  else {
+    os<< "["<<x.arrel()<<"]\n"<<d1<<" \\__";
+    dep = d1+" |  ";
+    os<< x.fd();
+    os<<"\n"<<d1<<" \\__";
+    dep = d1+"    ";
+    os<< x.fe();
+  }
+  dep=d1;
+  return os;
 }
 
 #endif
