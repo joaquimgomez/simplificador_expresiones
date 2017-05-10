@@ -110,7 +110,7 @@ arbre<token> llegir_prefixa(){
   arbre<token> a;
   token t;
 
-  if (cin >> t)   return a = arbre(t, LlegirPrefixa(), LlegirPrefixa());
+  if (cin >> t and t!= "->")   return a = arbre(t, LlegirPrefixa(), LlegirPrefixa());
   else  return a;
 
   /* HP: */
@@ -127,7 +127,7 @@ arbre<token> llegir_postfixa(){
   stack<arbre<token> > p;
 
   token t;
-  while(cin >> t){
+  while(cin >> t and t!= "->"){
     if (not t.es_operador_unari() and not t.es_operador_unari()){
       p.push(arbre(t));
     } else if (t.es_operador_unari()){
@@ -204,17 +204,19 @@ arbre<token> simplificar(arbre<token> a){
 int main(){
   
   arbre<token> a;
+  string res;
   
-  string s;
-  while(getline(cin, s)){
-    istringstream ss(s);
-    ss >> s;
-    if (s == "PREFIXA"){
+  while (cin >> form1){
+   if (form1 == "PREFIXA") a.llegir_prefixa();
+   else if (form1 == "POSTFIXA") a.llegir_postfixa();
+   cin >> form2;
+    if (form2 == "PREFIXA") res.expressio_prefixa(a);
+    else if (form2 == "POSTFIXA") res.expressio_postfixa(a);
+    else if (form2 == "INFIXA") res.expressio_infixa(a);
     
-    }
-    if (s == "POSTFIXA"){
-      
-    }
+    
+    
+  }
   
   
   
