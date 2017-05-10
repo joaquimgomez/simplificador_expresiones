@@ -208,10 +208,13 @@ int main(){
   string s;
   while(getline(cin, s)){
     istringstream ss(s);
-    string tipus;
-    ss >> tipus;
-    if (tipus == "PREFIXA"){
+    ss >> s;
+    if (s == "PREFIXA"){
+    
+    }
+    if (s == "POSTFIXA"){
       
+    }
   
   
   
