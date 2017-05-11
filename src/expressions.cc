@@ -4,7 +4,6 @@
 #include <list>
 #include "arbre.h"
 #include "token.h"
-#include "expressions.h"
 using namespace std;
 
 
@@ -13,7 +12,7 @@ string expressio_prefixa(arbre<token> a){
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació prefixa */
 
-  stack<arbre<token>> p;
+  stack<arbre<token> > p;
   p.push(a);
 
   string ExpPre;
@@ -21,7 +20,7 @@ string expressio_prefixa(arbre<token> a){
   while(not p.empty()){
     /* Inv: */
 
-    arbre<int> a1 = p.top();
+    arbre<token> a1 = p.top();
     p.pop();
 
     if (not a1.es_buit()){
@@ -45,14 +44,14 @@ string expressio_postfixa(arbre<token> a){
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació postfixa */
 
-  stack<arbre<token>> p;
+  stack<arbre<token> > p;
   p.push(a);
 
   list<token> l;
   while (not p.empty()){
     /* Inv: */
 
-    arbre<int> a1 = p.top();
+    arbre<token> a1 = p.top();
     p.pop();
 
     if (not a1.es_buit()){
@@ -79,8 +78,8 @@ string expressio_infixa(arbre<token> a){
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació infixa */
 
-  stack<arbre<token>> p;
-  p.push(a)
+  stack<arbre<token> > p;
+  p.push(a);
 
   string ExpInf;
   while(not p.empty()){
@@ -110,7 +109,7 @@ arbre<token> llegir_prefixa(){
   arbre<token> a;
   token t;
 
-  if (cin >> t and t!= "->")   return a = arbre(t, LlegirPrefixa(), LlegirPrefixa());
+  if (cin >> t and t != "->")   return a = arbre<token>(t, llegir_prefixa(), llegir_prefixa());
   else  return a;
 
   /* HP: */
@@ -127,27 +126,28 @@ arbre<token> llegir_postfixa(){
   stack<arbre<token> > p;
 
   token t;
-  while(cin >> t and t!= "->"){
+  while(cin >> t and t != "->"){
     if (not t.es_operador_unari() and not t.es_operador_unari()){
-      p.push(arbre(t));
+      p.push(arbre<token>(t));
     } else if (t.es_operador_unari()){
       arbre<token> a = p.top();
       p.pop();
 
-      p.push(arbre(t, a));
+      p.push(arbre<token>(t, a, arbre<token>()));
     } else {
       arbre<token> a1 = p.top();
       p.pop();
       arbre<token> a2 = p.top();
       p.pop();
 
-      p.push(arbre(t, a1, a2));
+      p.push(arbre<token>(t, a1, a2));
     }
   }
 
   return p.top();
 
 }
+
 
 arbre<token> llegir_infixa(){
 
@@ -200,20 +200,21 @@ arbre<token> simplificar(arbre<token> a){
 }
 
 
-
 int main(){
-  
+
   arbre<token> a;
   string res, form1, form2;
-  
+
   while (cin >> form1){
    if (form1 == "PREFIXA") a = llegir_prefixa();
-   else if (form1 == "POSTFIXA") a = llegir_postfixa(); 
+   else if (form1 == "POSTFIXA") a = llegir_postfixa();
+
    cin >> form2;
-    if (form2 == "PREFIXA") res = expressio_prefixa(a);
-    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
-    else if (form2 == "INFIXA") res = expressio_infixa(a);
-  cout << res << endl;
-  cout << a;
+   if (form2 == "PREFIXA") res = expressio_prefixa(a);
+   else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
+   else if (form2 == "INFIXA") res = expressio_infixa(a);
+
+   cout << res << endl;
+   cout << a;
   }
 }
