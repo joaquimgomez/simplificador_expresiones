@@ -25,7 +25,7 @@ string expressio_prefixa(arbre<token> a){
 
     if (not a1.es_buit()){
       if (i == 0)  ExpPre = a1.arrel().to_string();
-      else  ExpPre += " " + a1.arrel().to_string();
+      else  ExpPre = ExpPre + " " + a1.arrel().to_string();
 
       if (not a1.fd().es_buit())  p.push(a1.fd());
       if (not a1.fe().es_buit())  p.push(a1.fe());
@@ -67,6 +67,9 @@ string expressio_postfixa(arbre<token> a){
   while (not l.empty()){
     if (i == 0)   ExpPos = (*(l.begin())).to_string();
     else  ExpPos += " " + (*(l.begin())).to_string();
+
+    l.erase(l.begin());
+    ++i;
   }
 
   return ExpPos;
@@ -109,8 +112,9 @@ arbre<token> llegir_prefixa(){
   arbre<token> a;
   token t;
 
-  if (cin >> t and t != "->")   return a = arbre<token>(t, llegir_prefixa(), llegir_prefixa());
-  else  return a;
+  if (cin >> t and t != "->" and (t.es_operador_binari() or t.es_operador_unari()))   return arbre<token>(t, llegir_prefixa(), llegir_prefixa());
+  else if (t != "->")  return arbre<token>(t, arbre<token>(), arbre<token>());
+  else  return arbre<token>();
 
   /* HP: */
   /* Funció de fita: contingut al canal estandar cin */
@@ -127,8 +131,8 @@ arbre<token> llegir_postfixa(){
 
   token t;
   while(cin >> t and t != "->"){
-    if (not t.es_operador_unari() and not t.es_operador_unari()){
-      p.push(arbre<token>(t));
+    if (not t.es_operador_unari() and not t.es_operador_binari()){
+      p.push(arbre<token>(t, arbre<token>(), arbre<token>()));
     } else if (t.es_operador_unari()){
       arbre<token> a = p.top();
       p.pop();
@@ -140,62 +144,11 @@ arbre<token> llegir_postfixa(){
       arbre<token> a2 = p.top();
       p.pop();
 
-      p.push(arbre<token>(t, a1, a2));
+      p.push(arbre<token>(t, a2, a1));
     }
   }
 
   return p.top();
-
-}
-
-
-arbre<token> llegir_infixa(){
-
-  /* Pre: cert */
-  /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
-           canal estandar cin */
-
-}
-
-bool equivalents(arbre<token> a, arbre<token> b){
-
-  /* Pre: a = A, b = B */
-  /* Post: retorna true si A i B son equivalents */
-
-}
-
-arbre<token> simplificar_operador_unari(token op, arbre<token> b){
-
-  /* Pre: op = OP, b = B */
-  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
-
-}
-
-arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
-
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
-
-}
-
-arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<token> b2){
-
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
-
-}
-
-arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<token> b2){
-
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
-  /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
-
-}
-
-arbre<token> simplificar(arbre<token> a){
-
-  /* Pre: a = A */
-  /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
 }
 
@@ -209,12 +162,14 @@ int main(){
    if (form1 == "PREFIXA") a = llegir_prefixa();
    else if (form1 == "POSTFIXA") a = llegir_postfixa();
 
+   cout << a << endl;
+
    cin >> form2;
    if (form2 == "PREFIXA") res = expressio_prefixa(a);
    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
-   else if (form2 == "INFIXA") res = expressio_infixa(a);
+   else   res = expressio_infixa(a);
 
    cout << res << endl;
-   cout << a;
   }
+
 }
