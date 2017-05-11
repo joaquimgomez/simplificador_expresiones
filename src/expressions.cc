@@ -204,18 +204,16 @@ arbre<token> simplificar(arbre<token> a){
 int main(){
   
   arbre<token> a;
-  string res;
+  string res, form1, form2;
   
   while (cin >> form1){
    if (form1 == "PREFIXA") a = llegir_prefixa();
-   else if (form1 == "POSTFIXA") a = llegir_postfixa();
+   else if (form1 == "POSTFIXA") a = llegir_postfixa(); 
    cin >> form2;
     if (form2 == "PREFIXA") res = expressio_prefixa(a);
     else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
     else if (form2 == "INFIXA") res = expressio_infixa(a);
-  }
-  
   cout << res << endl;
-  
-  
+  cout << a;
+  }
 }
