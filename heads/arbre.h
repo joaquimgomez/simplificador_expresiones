@@ -32,11 +32,11 @@ class arbre {
        subarbres */
    arbre(const T &);
     /* Pre: cert */
-    /* Post: el resultat és un arbre amb un element i dos 
+    /* Post: el resultat és un arbre amb un element i dos
        subarbres buits*/
    arbre(const arbre<T> &);
    /* Pre: cert */
-   /* Post: el resultat és una cópia de l'arbre rebut */
+   /* Post: el resultat és una còpia de l'arbre rebut */
 
 
    //destructor: esborra automàticament els objectes locals
@@ -65,6 +65,13 @@ class arbre {
    bool es_buit() const;
    /* Pre: cert */
    /* Post: el resultat indica si el p.i. és buit o no */
+   bool es_fulla() const;
+   /* Pre: cert */
+   /* Post: el resultat indica si el p.i. és una fulla (el fill esquerra i dret són buits) */
+
+   //Escriptura/Lectura
+
+   template <class U> friend std::ostream& operator<<(std::ostream &, const arbre<U> &);
 
 };
 
@@ -87,14 +94,6 @@ arbre<T>::arbre()
 }
 
 template <class T>
-arbre<T>::arbre(const arbre<T>& t)
-/* Pre: cert */
-/* Post: el resultat és una còpia de t */
-{
-  clone(t);
-}
-
-template <class T>
 arbre<T>::arbre(const T& x, const arbre<T>& a1, const arbre<T>& a2)
 /* Pre: cert */
 /* Post: el resultat és un arbre amb x com arrel, a1 com a fill
@@ -103,6 +102,24 @@ esquerre i a2 com a fill dret */
   info = x;
   esquerre = new arbre<T>; esquerre->clone(a1);
   dret = new arbre<T>; dret->clone(a2);
+}
+
+template <class T>
+arbre<T>::arbre(const T &x)
+/* Pre: cert */
+/* Post: el resultat és un arbre amb un element i dos subarbres buits*/
+{
+  info = x;
+  dret = new arbre<T>;
+  esquerre = new arbre<T>;
+}
+
+template <class T>
+arbre<T>::arbre(const arbre<T>& t)
+/* Pre: cert */
+/* Post: el resultat és una còpia de t */
+{
+  clone(t);
 }
 
 
@@ -140,6 +157,18 @@ bool arbre<T>::es_buit() const
 /* Post: el resultat indica si el p.i. és buit o no */
 {
   return (dret==NULL && esquerre==NULL);
+}
+
+template <class T>
+bool arbre<T>::es_fulla() const
+/* Pre: cert */
+/* Post: el resultat indica si el p.i. és una fulla (el fill esquerra i dret són buits) */
+{
+  if (this->es_buit()) {
+    std::cout<<"ERROR - Operació 'es_fulla' sobre un arbre buit."<<std::endl;
+    exit(1);
+  }
+  return (dret->es_buit() && esquerre->es_buit());
 }
 
 template <class T>
@@ -198,12 +227,12 @@ void arbre<T>::clone(const arbre<T>& t) {
 }
 
 //Escriptura
-std::string dep=""; 
+std::string dep="";
 template <class U>
-std::ostream& operator<<(std::ostream& os , const arbre<U> &x) 
+std::ostream& operator<<(std::ostream& os , const arbre<U> &x)
 {
   std::string d1=dep;
-  if (x.es_buit()) 
+  if (x.es_buit())
     os<<".";
   else {
     os<< "["<<x.arrel()<<"]\n"<<d1<<" \\__";
