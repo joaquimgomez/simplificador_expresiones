@@ -112,9 +112,20 @@ arbre<token> llegir_prefixa(){
   arbre<token> a;
   token t;
 
-  if (cin >> t and t != "->" and (t.es_operador_binari() or t.es_operador_unari()))   return arbre<token>(t, llegir_prefixa(), llegir_prefixa());
-  else if (t != "->")  return arbre<token>(t, arbre<token>(), arbre<token>());
-  else  return arbre<token>();
+  cin >> t;
+  if (t == "->")  return arbre<token>();
+  else if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);
+  else {
+    if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());
+    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());
+  }
+
+  /* CASOS BASICOS: - cin se acabe = t == "->"
+                    - t no es un operador
+     CASOS RECURSIUS: - t es unari -->
+                      - t es binri
+
+  */
 
   /* HP: */
   /* Funció de fita: contingut al canal estandar cin */
@@ -132,7 +143,7 @@ arbre<token> llegir_postfixa(){
   token t;
   while(cin >> t and t != "->"){
     if (not t.es_operador_unari() and not t.es_operador_binari()){
-      p.push(arbre<token>(t, arbre<token>(), arbre<token>()));
+      p.push(arbre<token>(t));
     } else if (t.es_operador_unari()){
       arbre<token> a = p.top();
       p.pop();
@@ -156,20 +167,23 @@ arbre<token> llegir_postfixa(){
 int main(){
 
   arbre<token> a;
-  string res, form1, form2;
+  string res, form1, form2, item;
 
   while (cin >> form1){
-   if (form1 == "PREFIXA") a = llegir_prefixa();
-   else if (form1 == "POSTFIXA") a = llegir_postfixa();
+    if (form1 == "PREFIXA") a = llegir_prefixa();
+    else if (form1 == "POSTFIXA") a = llegir_postfixa();
 
-   cout << a << endl;
+    cout << a << endl;
 
-   cin >> form2;
-   if (form2 == "PREFIXA") res = expressio_prefixa(a);
-   else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
-   else   res = expressio_infixa(a);
+    cin >> item;
+    cout << item;
+    cin >> form2;
 
-   cout << res << endl;
+    if (form2 == "PREFIXA") res = expressio_prefixa(a);
+    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
+    else if (form2 == "INFIXA") res = expressio_infixa(a);
+
+    cout << res << endl;
   }
 
 }
