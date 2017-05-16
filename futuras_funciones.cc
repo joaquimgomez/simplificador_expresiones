@@ -5,7 +5,7 @@ bool equivalents(arbre<token> a, arbre<token> b){
 
   bool eq = true;
 
-  if (not a.es_buit()){
+  if (not a.es_buit() and not b.es_buit()){
     if (a.arrel() != b.arrel())   eq = false;
     else {
       if (a.arrel().es_operador_unari())  eq = equivalents(a.fe(), b.fe());
