@@ -1,0 +1,16 @@
+1 4 4
+0 4 5
+1 T T
+0 T F
+1 x x
+0 x y
+1 (2 + 4) (2 + 4)
+1 (2 + 4) (4 + 2)
+0 (2 + 4) (2 + 5)
+1 (2 - 4) (2 - 4)
+0 (2 - 4) (4 - 2)
+0 (2 - 4) (2 - 5)
+1 (not T) (not T)
+0 (not T) (not F)
+1 (a and (b or (not (T and a)))) (((not (a and T)) or b) and a)
+0 (a and (b or (not (T or a)))) (((not (a and T)) or b) and a)
