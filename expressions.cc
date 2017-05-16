@@ -16,7 +16,6 @@ string expressio_prefixa(arbre<token> a){
   p.push(a);
 
   string ExpPre;
-  int i = 0;
   while(not p.empty()){
     /* Inv: */
 
@@ -24,14 +23,11 @@ string expressio_prefixa(arbre<token> a){
     p.pop();
 
     if (not a1.es_buit()){
-      if (i == 0)  ExpPre = a1.arrel().to_string();
-      else  ExpPre = ExpPre + " " + a1.arrel().to_string();
+      ExpPre = ExpPre += a1.arrel().to_string() + " ";
 
       if (not a1.fd().es_buit())  p.push(a1.fd());
       if (not a1.fe().es_buit())  p.push(a1.fe());
     }
-
-    ++i;
 
   }
 
@@ -63,13 +59,10 @@ string expressio_postfixa(arbre<token> a){
   }
 
   string ExpPos;
-  int i = 0;
   while (not l.empty()){
-    if (i == 0)   ExpPos = (*(l.begin())).to_string();
-    else  ExpPos += " " + (*(l.begin())).to_string();
-
+    /* Inv: */
+    ExpPos += (*(l.begin())).to_string() + " ";
     l.erase(l.begin());
-    ++i;
   }
 
   return ExpPos;
@@ -81,23 +74,10 @@ string expressio_infixa(arbre<token> a){
   /* Pre: a = A */
   /* Post: retorna un string amb el contingut d'A en notació infixa */
 
-  stack<arbre<token> > p;
-  p.push(a);
-
   string ExpInf;
-  while(not p.empty()){
-    /* Inv:  */
-
-    arbre<token> a1 = p.top();
-    p.pop();
-
-    if (a1.fd().es_buit() and a1.fe().es_buit())  ExpInf += a1.arrel().to_string();
-    else {
-      if (not a1.fd().es_buit())  p.push(a1.fd());
-      if (not a1.fe().es_buit())  p.push(a1.fe());
-    }
-
-  }
+  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();
+  else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";
+  else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";
 
   return ExpInf;
 
@@ -113,19 +93,11 @@ arbre<token> llegir_prefixa(){
   token t;
 
   cin >> t;
-  if (t == "->")  return arbre<token>();
-  else if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);
+  if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);  // Cas Basic: t no es un operador.
   else {
-    if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());
-    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());
+    if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());   // Cas Recursiu 1: t es un operador unari.
+    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());   // Cas Recursiu 2: t es un poperador binari
   }
-
-  /* CASOS BASICOS: - cin se acabe = t == "->"
-                    - t no es un operador
-     CASOS RECURSIUS: - t es unari -->
-                      - t es binri
-
-  */
 
   /* HP: */
   /* Funció de fita: contingut al canal estandar cin */
@@ -142,13 +114,16 @@ arbre<token> llegir_postfixa(){
 
   token t;
   while(cin >> t and t != "->"){
+    /* Inv: */
     if (not t.es_operador_unari() and not t.es_operador_binari()){
       p.push(arbre<token>(t));
+
     } else if (t.es_operador_unari()){
       arbre<token> a = p.top();
       p.pop();
 
       p.push(arbre<token>(t, a, arbre<token>()));
+
     } else {
       arbre<token> a1 = p.top();
       p.pop();
@@ -156,7 +131,9 @@ arbre<token> llegir_postfixa(){
       p.pop();
 
       p.push(arbre<token>(t, a2, a1));
+
     }
+
   }
 
   return p.top();
@@ -167,16 +144,17 @@ arbre<token> llegir_postfixa(){
 int main(){
 
   arbre<token> a;
-  string res, form1, form2, item;
+  string res, form1, form2;
 
   while (cin >> form1){
-    if (form1 == "PREFIXA") a = llegir_prefixa();
-    else if (form1 == "POSTFIXA") a = llegir_postfixa();
+    if (form1 == "PREFIXA"){
+      a = llegir_prefixa();
+      string item;
+      cin >> item;
 
-    cout << a << endl;
+    } else if (form1 == "POSTFIXA") a = llegir_postfixa();
 
-    cin >> item;
-    cout << item;
+    //cout << a << endl;
     cin >> form2;
 
     if (form2 == "PREFIXA") res = expressio_prefixa(a);
