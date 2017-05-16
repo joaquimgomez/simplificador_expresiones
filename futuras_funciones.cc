@@ -1,4 +1,3 @@
-
 bool equivalents(arbre<token> a, arbre<token> b){
 
   /* Pre: a = A, b = B */
@@ -6,11 +5,13 @@ bool equivalents(arbre<token> a, arbre<token> b){
 
   bool eq = true;
 
-  if (a.arrel() != b.arrel())   eq = false;
-  else {
-    if (a.arrel().es_operador_unari())  eq = equivalents(a.fe(), b.fe());
-    else if (a.arrel().es_operador_commutatiu())   eq = (equivalents(a.fd(), b.fd()) and equivalents(a.fe(), b.fe())) or (equivalents(a.fd(), b.fe()) and equivalents(a.fe(), b.fd()));
-    else  eq = equivalents(a.fe(), b.fe()) and equivalents(a.fd(), b.fd());
+  if (not a.es_buit()){
+    if (a.arrel() != b.arrel())   eq = false;
+    else {
+      if (a.arrel().es_operador_unari())  eq = equivalents(a.fe(), b.fe());
+      else if (a.arrel().es_operador_commutatiu())   eq = (equivalents(a.fd(), b.fd()) and equivalents(a.fe(), b.fe())) or (equivalents(a.fd(), b.fe()) and equivalents(a.fe(), b.fd()));
+      else  eq = equivalents(a.fe(), b.fe()) and equivalents(a.fd(), b.fd());
+    }
   }
 
   /* HI: */
@@ -29,7 +30,7 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
   else if (b.arrel() == "T")   return arbre<token>(token("F"));
   else if (b.arrel() == "not") return b.fe().arrel();
   else return arbre<token>(op, b, arbre<token>());
-  
+
 }
 
 arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
