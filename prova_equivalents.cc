@@ -147,7 +147,7 @@ bool equivalents(arbre<token> a, arbre<token> b){
 
   bool eq = true;
 
-  if (not a.es_buit()){
+  if (not a.es_buit() and not b.es_buit()){
     if (a.arrel() != b.arrel())   eq = false;
     else {
       if (a.arrel().es_operador_unari())  eq = equivalents(a.fe(), b.fe());
@@ -174,7 +174,7 @@ int main(){
 
     cin >> form_b;
     if (form_b == "PREFIXA")  b = llegir_prefixa();
-    else if (form_b == "POSTFIXA") a = llegir_postfixa();
+    else if (form_b == "POSTFIXA") b = llegir_postfixa();
 
 
     cout << equivalents(a,b) << " " << expressio_infixa(a) << " " << expressio_infixa(b) << endl;
