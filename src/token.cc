@@ -82,7 +82,7 @@ bool token::es_variable() const{
 }
 
 int token::to_int() const{
-  /* Pre: el p.i. es un enter */
+  /* Pre: el p.i. és un enter */
   /* Post: retorna el valor enter del p.i. */
 
   return stoi(t);   // Funció de la STL que converteix un string a int.
@@ -90,7 +90,7 @@ int token::to_int() const{
 }
 
 bool token::to_bool() const{
-  /* Pre: el p.i. es un booleà */
+  /* Pre: el p.i. és un booleà */
   /* Post: reotrna el valor booleà true o false del p.i. */
 
   return t == "T";
@@ -98,7 +98,7 @@ bool token::to_bool() const{
 }
 
 string token::to_string() const{
-  /* Pre: el p.i. es un string */
+  /* Pre: el p.i. és un string */
   /* Post: retorna un string del token del p.i. */
 
   return t;
