@@ -80,9 +80,9 @@ string expressio_infixa(arbre<token> a){
   /* Post: retorna un string amb el contingut d'A en notació infixa */
 
   string ExpInf;
-  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();   // Cas Basic: t no es un operador, aleshores es una fulla.
-  else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";  // Cas Recursiu 1: t es un operador binari.
-  else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";  // Cas Recursiu 2: t es un operador unari.
+  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();   // Cas Basic: t no és un operador, aleshores és una fulla.
+  else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";  // Cas Recursiu 1: t és un operador binari.
+  else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";  // Cas Recursiu 2: t és un operador unari.
 
   /* HI: ExpInf = "expressió infixa generada a partir d'A" */
   /* Funció de fita: nombre d'elements d'A */
@@ -101,13 +101,13 @@ arbre<token> llegir_prefixa(){
   token t;
 
   cin >> t;
-  if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);  // Cas Basic: t no es un operador.
+  if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);  // Cas Basic: t no és un operador.
   else {
-    if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());   // Cas Recursiu 1: t es un operador unari.
-    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());   // Cas Recursiu 2: t es un poperador binari
+    if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());   // Cas Recursiu 1: t és un operador unari.
+    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());   // Cas Recursiu 2: t és un poperador binari
   }
 
-  /* HI: es retorna un subarbre a partir de l'expressió legida pel canal estandar cin */
+  /* HI: es retorna un subarbre a partir de l'expressió llegida pel canal estandar cin */
   /* Funció de fita: contingut al canal estandar cin */
 
 }
