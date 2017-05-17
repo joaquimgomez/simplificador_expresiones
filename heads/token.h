@@ -53,23 +53,23 @@ class token{
       /* Post: indica si el token és una variable */
 
     int to_int() const;
-      /* Pre: un token que sigui un número enter */
-      /* Post: donat un token número enter retorna el valor enter */
+      /* Pre: el p.i. es un enter */
+      /* Post: retorna el valor enter del p.i. */
 
     bool to_bool() const;
-      /* Pre: un token que sigui booleà */
-      /* Post: donat un token booleà retorna el valor booleà true o false */
+      /* Pre: el p.i. es un booleà */
+      /* Post: reotrna el valor booleà true o false del p.i. */
 
     string to_string() const;
-      /* Pre: cert */
-      /* Post: donat un token retorna el valor string corresponent */
+      /* Pre: el p.i. es un string */
+      /* Post: retorna un string del token del p.i. */
 
     bool operator==(const token &t) const;
       /* Pre: cert */
       /* Post: indica si el token del p.i. és igual al token t */
 
     bool operator!=(const token &t) const;
-      /* Pre: cert*/
+      /* Pre: cert */
       /* Post: indica si el token del p.i. és diferent al token t */
 
     bool operator==(const char s[]) const;
@@ -85,7 +85,7 @@ class token{
       /* Post: llegeix del canal d'entrada el contingut del token */
 
     friend ostream& operator<<(ostream &os, const token &t);
-      /* Pre: cert*/
+      /* Pre: cert */
       /* Post: mostra al canal de sortida el contingut del token */
 
 };

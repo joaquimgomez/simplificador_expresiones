@@ -70,9 +70,6 @@ bool token::es_enter() const{
   /* Post: indica si el token és una constant entera */
 
   return t[0] >= '0' and t[0] <= '9';
-  /*return t != "T" and t != "F" and not (t[0] >= 'a' and t[0] <= 'z') and not (t[0] >= 'A' and t[0] <= 'Z')
-         and t != "or" and t != "not" and t != "and" and t != "!=" and t != "==" and t != "+" and t != "-"
-         and t != "*" and t != "**" and t != "/"; */
 
 }
 
@@ -85,24 +82,24 @@ bool token::es_variable() const{
 }
 
 int token::to_int() const{
-  /* Pre: cert */
-  /* Post: donat un token número enter retorna el valor enter */
+  /* Pre: el p.i. es un enter */
+  /* Post: retorna el valor enter del p.i. */
 
   return stoi(t);
 
 }
 
 bool token::to_bool() const{
-  /* Pre: cert */
-  /* Post: donat un token booleà retorna el valor booleà true o false */
+  /* Pre: el p.i. es un booleà */
+  /* Post: reotrna el valor booleà true o false del p.i. */
 
   return t == "T";
 
 }
 
 string token::to_string() const{
-  /* Pre: cert */
-  /* Post: donat un token retorna el valor string corresponent */
+  /* Pre: el p.i. es un string */
+  /* Post: retorna un string del token del p.i. */
 
   return t;
 
