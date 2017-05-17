@@ -69,7 +69,7 @@ bool token::es_enter() const{
   /* Pre: cert */
   /* Post: indica si el token és una constant entera */
 
-  return t[0] >= '0' and t[0] <= '9';
+  return (t[0] >= '0' and t[0] <= '9') or (t.size() >= 2 and t[0] == '-' and t[1] >= '0' and t[1] <= '9');
 
 }
 
