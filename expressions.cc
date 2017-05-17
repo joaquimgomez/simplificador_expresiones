@@ -17,7 +17,9 @@ string expressio_prefixa(arbre<token> a){
 
   string ExpPre;
   while(not p.empty()){
-    /* Inv: */
+    /* Inv: a1 = "part d'A que s'està tractant actualment",
+       p = "elements d'A que queden per analitzar" i
+       ExpPre = "expressió resultant de la part analitzada d'A". */
 
     arbre<token> a1 = p.top();
     p.pop();
@@ -45,7 +47,9 @@ string expressio_postfixa(arbre<token> a){
 
   list<token> l;
   while (not p.empty()){
-    /* Inv: */
+    /* Inv: a1 = "part d'A que s'està tractant actualment",
+       p = "elements d'A que queden per analitzar" i
+       l = "elements d'A que ja s'han recollit". */
 
     arbre<token> a1 = p.top();
     p.pop();
@@ -60,7 +64,8 @@ string expressio_postfixa(arbre<token> a){
 
   string ExpPos;
   while (not l.empty()){
-    /* Inv: */
+    /* Inv: ExpPos = "expressió resultat de la part analitzada de l" i
+       l = "elements que queden per tractar". */
     ExpPos += (*(l.begin())).to_string() + " ";
     l.erase(l.begin());
   }
@@ -75,9 +80,12 @@ string expressio_infixa(arbre<token> a){
   /* Post: retorna un string amb el contingut d'A en notació infixa */
 
   string ExpInf;
-  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();
-  else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";
-  else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";
+  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();   // Cas Basic: t no es un operador, aleshores es una fulla.
+  else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";  // Cas Recursiu 1: t es un operador binari.
+  else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";  // Cas Recursiu 2: t es un operador unari.
+
+  /* HI: ExpInf = "expressió infixa generada a partir d'A" */
+  /* Funció de fita: nombre d'elements d'A */
 
   return ExpInf;
 
@@ -99,7 +107,7 @@ arbre<token> llegir_prefixa(){
     else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());   // Cas Recursiu 2: t es un poperador binari
   }
 
-  /* HP: */
+  /* HI: es retorna un subarbre a partir de l'expressió legida pel canal estandar cin */
   /* Funció de fita: contingut al canal estandar cin */
 
 }
@@ -114,7 +122,10 @@ arbre<token> llegir_postfixa(){
 
   token t;
   while(cin >> t and t != "->"){
-    /* Inv: */
+    /* Inv: t = "token actual que s'ha d'introduir a l'arbre",
+       p = "subarbres ja costruits" i
+       a = a1 = a2 = "subarbre que s'està construint actualment" */
+
     if (not t.es_operador_unari() and not t.es_operador_binari()){
       p.push(arbre<token>(t));
 
@@ -147,6 +158,12 @@ int main(){
   string res, form1, form2;
 
   while (cin >> form1){
+    /* Inv: form1 = "format en que s'ha de llegir l'expressió per generar l'arbre",
+       form2 = "format desitjat de sortida",
+       item = "recolliment de -> inservible",
+       a = "arbre generat a partir de l'expressió rebuda en el format de form1" i
+       res = "string amb l'expressió en el format de form2" */
+
     if (form1 == "PREFIXA"){
       a = llegir_prefixa();
       string item;
