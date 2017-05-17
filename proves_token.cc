@@ -8,8 +8,10 @@ int main(){
 
   int i = 0;
   while (cin >> t){
-    /* Inv: */
-    
+    /* Inv: t = "token que s'està analitzan actualment",
+       tAnt = "token anterior a l'actual" i
+       i = "nombre de tokens analitzats" */
+
     cout << "=============================" << endl;
     cout << "TOKEN: " << t << endl;
     cout << "És un operador unari: " << t.es_operador_unari() << endl;
