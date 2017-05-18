@@ -2,6 +2,7 @@
 #include <string>
 #include <stack>
 #include <list>
+#include <math.h>
 #include "arbre.h"
 #include "token.h"
 using namespace std;
@@ -181,7 +182,7 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
   if (b.arrel() == "F")  return arbre<token>(token(true));
   else if (b.arrel() == "T")   return arbre<token>(token(false));
-  else if (b.arrel() == "not") return b.fe().arrel();
+  else if (b.arrel() == "not") return b.fe();
   else return arbre<token>(op, b, arbre<token>());
 
 }
@@ -191,6 +192,18 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
+  if (op == "and" and (b1.arrel() == "F" or b2.arrel() == "F"))   return arbre<token>(token(false));
+  else if (op == "and" and b1.arrel() == "T")   return arbre<token>(b2);
+  else if (op == "and" and b2.arrel() == "T")   return arbre<token>(b1);
+  else if (op == "or" and (b1.arrel() == "T" or b2.arrel() == "T"))   return arbre<token>(token(true));
+  else if (op == "or" and b1.arrel() == "F")  return arbre<token>(b2);
+  else if (op == "or" and b2.arrel() == "F")  return arbre<token>(b1);
+  else if ((op == "and" or op == "or") and equivalents(b1, b2))   return b2;
+  else if (b1.arrel().es_bool() and b2.arrel().es_bool()){
+    if (op == "or")   return arbre<token>(token(b1.arrel().to_bool() or b2.arrel().to_bool()));
+    else if (op == "and") return arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
+  } else  return arbre<token>(op, b1, b2);
+
 }
 
 arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<token> b2){
@@ -198,6 +211,16 @@ arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<to
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
+  if (equivalents(b1, b2)){
+    if (op == "==")   return arbre<token>(token(true));
+    else if (op == "!=")  return arbre<token>(token(false));
+  } else if ((b1.es_enter() and b2.es_enter()) or (b1.es_bool() and b2.es_bool())){
+    if (op == "==")   return arbre<token>(token(b1.arrel() == b2.arrel()));
+    else if (op == "!=")  return arbre<token>(token(b1.arrel() != b2.arrel()));
+  } else  return arbe<token>(op, b1, b2);
+
+  /* ¿¿¿¿¿ Heu de tenir en compte que l'operació == o != entre dues variables només es simplifica si són
+     la mateixa variable. Si les variables són diferents no es pot simplificar.  ???? */
 
 }
 
@@ -205,6 +228,39 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
 
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
+
+  arbre<token> simpl;
+
+  if (b1.es_enter() and b2.es_enter()){
+    if (op == "*")  simpl = arbre<token>(token(b1.arrel().to_int() * b2.arrel().to_int()));
+    else if (op == "+")   simpl = arbre<token>((token(b1.arrel().to_int() + b2.arrel().to_int()));
+    else if (op == "-")   simpl = arbre<token>(token(b1.arrel().to_int() - b2.arrel().to_int()));
+    else if (op == "/")   simpl = arbre<token>(token(b1.arrel().to_int() / b2.arrel().to_int()));
+    else if (op == "**")  simpl = arbre<token>(token(pow(b1.arrel().to_int(), b2.arrel().to_int()));
+  } else if (not b1.es_enter() or not b2.es_enter()){
+    if (op == "*"){
+      if (b1.arrel() == "0" or b2.arrel() == "0")   simpl = arbre<token>(token());
+      else if (b1.arrel() == "1")   simpl = b2;
+      else if (b2.arrel() == "1")   simpl = b1;
+    } else if (op == "+"){
+      if (b1.arrel() == "0")  simpl = b2;
+      else if (b2.arrel() == "0")   simpl = b1;
+    } else if (op == "-"){
+      if (b2.arrel() == "0")  simpl = b1;
+      else if (equivalents(b1, b2))   simpl = arbre<token>(token());
+    } else if (op == "/"){
+      if (b1.arrel() == "0")  simpl = arbre<token>(token());
+      else if (b2.arrel() == "1")  simpl = b1;
+      else if (equivalents(b1, b2))   simpl = arbre<token>(token(1));
+    } else if (op == "**"){
+      if (b1.arrel() == "0")  simpl = arbre<token>(token());
+      else if (b1.arrel() == "1")   simpl = arbre<token>(token(1));
+      else if (b2.arrel() == "0")   simpl = arbre<token>(token(1));
+      else if (b2.arrel() == "1")   simpl = b1;
+    }
+  } else simpl = arbe<token>(op, b1, b2);
+
+  return simpl;
 
 }
 
@@ -221,11 +277,16 @@ arbre<token> llegir_infixa(){
   /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
            canal estandar cin */
 
+  stack<token> ops;
+  stack<arbre<token> > res;
+
+  
+
 }
 
 int main(){
 
-  arbre<token> a;
+  arbre<token> a, simpl;
   string res, form1, form2;
 
   while (cin >> form1){
@@ -241,13 +302,17 @@ int main(){
       cin >> item;
 
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
+    else  a = llegir_infixa();
+
+    simpl = simplificar(a);
+    //cout << simpl << endl;
 
     //cout << a << endl;
     cin >> form2;
 
-    if (form2 == "PREFIXA") res = expressio_prefixa(a);
-    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
-    else if (form2 == "INFIXA") res = expressio_infixa(a);
+    if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
+    else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
+    else res = expressio_infixa(simpl);
 
     cout << res << endl;
   }
