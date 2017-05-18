@@ -269,6 +269,8 @@ arbre<token> simplificar(arbre<token> a){
   /* Pre: a = A */
   /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
+
+
 }
 
 arbre<token> llegir_infixa(){
@@ -279,8 +281,20 @@ arbre<token> llegir_infixa(){
 
   stack<token> ops;
   stack<arbre<token> > res;
+  token t;
 
-  
+  while (cin >> t){
+    /* Inv: */
+    if (t == "(")   ops.push(t);
+    else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
+    
+    else if (t == ")"){
+      while ()
+    }
+
+  }
+
+
 
 }
 
