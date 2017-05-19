@@ -269,7 +269,61 @@ arbre<token> simplificar(arbre<token> a){
   /* Pre: a = A */
   /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
+  stack<arbre<token> > p;
+  p.push(a);
 
+  list<token> l;
+  while (not p.empty()){
+    /* Inv: a1 = "part d'A que s'està tractant actualment",
+       p = "elements d'A que queden per analitzar" i
+       l = "elements d'A que ja s'han recollit". */
+
+    arbre<token> a1 = p.top();
+    p.pop();
+
+    if (not a1.es_buit()){
+      l.insert(l.begin(), a1.arrel());
+      if (not a1.fe().es_buit())  p.push(a1.fe());
+      if (not a1.fd().es_buit())  p.push(a1.fd());
+    }
+
+  }
+
+  while(not l.empty()){
+    /* Inv: */
+
+    if (not (*(l.begin())).arrel().es_operador_unari() and not (*(l.begin())).arrel().es_operador_binari()){
+      p.push(*(l.begin()));
+      l.erase(l.begin());
+
+    } else if ((*(l.begin())).arrel().es_operador_binari()){
+      token op = (*(l.begin())).arrel();
+      l.erase(l.begin());
+
+      arbre<token> a1, a2;
+      a1 = p.top();
+      p.pop();
+      a2 = p.top();
+      p.pop();
+
+      if (op == "and" or op == "or")  p.push(simplificar_operador_boolea(op, a2, a1));
+      else if (op == "==" or op == "!=")  p.push(simplificar_operador_comparacio(op, a2, a1));
+      else  p.push(simplificar_operador_aritmetic(op, a2, a1));
+
+    } else {
+      token op = (*(l.begin())).arrel();
+      l.erase(l.begin());
+
+      arbre<token> a1 = p.top();
+      p.pop();
+
+      p.push(simplificar_operador_unari(op, a1));
+
+    }
+
+  }
+
+  return p.top();
 
 }
 
@@ -281,22 +335,31 @@ arbre<token> llegir_infixa(){
 
   stack<token> ops;
   stack<arbre<token> > res;
-  token t;
 
+  token t;
   while (cin >> t){
     /* Inv: */
     if (t == "(")   ops.push(t);
     else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
-    
+    else if (t.es_operador_unari() and t.es_operador_binari())  ops.push(t);
     else if (t == ")"){
-      while ()
+      while(ops.top() != "("){
+        token p = ops.top();
+        ops.pop();
+        arbre<token> a1 = res.top();
+        res.pop();
+        arbre<token> a2 = res.top();
+        res.pop();
+
+        res.push(arbre<token>(p, a2, a1));
+      }
+      ops.pop();
     }
 
   }
 
-
-
 }
+
 
 int main(){
 
