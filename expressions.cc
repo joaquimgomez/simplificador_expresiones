@@ -358,6 +358,12 @@ arbre<token> llegir_infixa(){
 
   }
 
+  while (not ops.empty()){
+    token p = ops.top();
+    ops.pop();
+    arbre
+  }
+
 }
 
 
