@@ -199,7 +199,7 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
   else if (op == "or" and b1.arrel() == "F")  return arbre<token>(b2);
   else if (op == "or" and b2.arrel() == "F")  return arbre<token>(b1);
   else if ((op == "and" or op == "or") and equivalents(b1, b2))   return b2;
-  else if (b1.arrel().es_bool() and b2.arrel().es_bool()){
+  else if (b1.arrel().es_boolea() and b2.arrel().es_boolea()){
     if (op == "or")   return arbre<token>(token(b1.arrel().to_bool() or b2.arrel().to_bool()));
     else if (op == "and") return arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
   } else  return arbre<token>(op, b1, b2);
@@ -214,10 +214,10 @@ arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<to
   if (equivalents(b1, b2)){
     if (op == "==")   return arbre<token>(token(true));
     else if (op == "!=")  return arbre<token>(token(false));
-  } else if ((b1.es_enter() and b2.es_enter()) or (b1.es_bool() and b2.es_bool())){
+  } else if ((b1.arrel().es_enter() and b2.arrel().es_enter()) or (b1.arrel().es_boolea() and b2.arrel().es_boolea())){
     if (op == "==")   return arbre<token>(token(b1.arrel() == b2.arrel()));
     else if (op == "!=")  return arbre<token>(token(b1.arrel() != b2.arrel()));
-  } else  return arbe<token>(op, b1, b2);
+  } else  return arbre<token>(op, b1, b2);
 
   /* ¿¿¿¿¿ Heu de tenir en compte que l'operació == o != entre dues variables només es simplifica si són
      la mateixa variable. Si les variables són diferents no es pot simplificar.  ???? */
@@ -231,13 +231,13 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
 
   arbre<token> simpl;
 
-  if (b1.es_enter() and b2.es_enter()){
+  if (b1.arrel().es_enter() and b2.arrel().es_enter()){
     if (op == "*")  simpl = arbre<token>(token(b1.arrel().to_int() * b2.arrel().to_int()));
-    else if (op == "+")   simpl = arbre<token>((token(b1.arrel().to_int() + b2.arrel().to_int()));
+    else if (op == "+")   simpl = arbre<token>(token(b1.arrel().to_int() + b2.arrel().to_int()));
     else if (op == "-")   simpl = arbre<token>(token(b1.arrel().to_int() - b2.arrel().to_int()));
     else if (op == "/")   simpl = arbre<token>(token(b1.arrel().to_int() / b2.arrel().to_int()));
-    else if (op == "**")  simpl = arbre<token>(token(pow(b1.arrel().to_int(), b2.arrel().to_int()));
-  } else if (not b1.es_enter() or not b2.es_enter()){
+    else if (op == "**")  simpl = arbre<token>(token((int) pow(b1.arrel().to_int(), b2.arrel().to_int())));
+  } else if (not b1.arrel().es_enter() or not b2.arrel().es_enter()){
     if (op == "*"){
       if (b1.arrel() == "0" or b2.arrel() == "0")   simpl = arbre<token>(token());
       else if (b1.arrel() == "1")   simpl = b2;
@@ -258,7 +258,7 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
       else if (b2.arrel() == "0")   simpl = arbre<token>(token(1));
       else if (b2.arrel() == "1")   simpl = b1;
     }
-  } else simpl = arbe<token>(op, b1, b2);
+  } else simpl = arbre<token>(op, b1, b2);
 
   return simpl;
 
@@ -292,12 +292,12 @@ arbre<token> simplificar(arbre<token> a){
   while(not l.empty()){
     /* Inv: */
 
-    if (not (*(l.begin())).arrel().es_operador_unari() and not (*(l.begin())).arrel().es_operador_binari()){
+    if (not (*(l.begin())).es_operador_unari() and not (*(l.begin())).es_operador_binari()){
       p.push(*(l.begin()));
       l.erase(l.begin());
 
-    } else if ((*(l.begin())).arrel().es_operador_binari()){
-      token op = (*(l.begin())).arrel();
+    } else if ((*(l.begin())).es_operador_binari()){
+      token op = *(l.begin());
       l.erase(l.begin());
 
       arbre<token> a1, a2;
@@ -311,7 +311,7 @@ arbre<token> simplificar(arbre<token> a){
       else  p.push(simplificar_operador_aritmetic(op, a2, a1));
 
     } else {
-      token op = (*(l.begin())).arrel();
+      token op = *(l.begin());
       l.erase(l.begin());
 
       arbre<token> a1 = p.top();
@@ -356,7 +356,7 @@ arbre<token> llegir_infixa(){
   stack<arbre<token> > res;
 
   token t;
-  while (cin >> t){
+  while (cin >> t and t != "->"){
     /* Inv: */
     if (t == "(")   ops.push(t);
     else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
@@ -430,15 +430,17 @@ int main(){
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
 
-    simpl = simplificar(a);
-    //cout << simpl << endl;
-
     //cout << a << endl;
+
+    simpl = simplificar(a);
+    cout << simpl << endl;
+
+
     cin >> form2;
 
-    if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
-    else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
-    else res = expressio_infixa(simpl);
+    if (form2 == "PREFIXA") res = expressio_prefixa(a);
+    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
+    else res = expressio_infixa(a);
 
     cout << res << endl;
   }
