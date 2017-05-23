@@ -327,6 +327,25 @@ arbre<token> simplificar(arbre<token> a){
 
 }
 
+int prioritat_token(token op){
+
+  // Pre:
+  // Post:
+
+  int prioritat;
+
+  if (op == "or")   prioritat = 1;
+  else if (op == "and")   prioritat = 2;
+  else if (op == "not")   prioritat = 3;
+  else if (op == "==" or op == "!=")  prioritat = 4;
+  else if (op == "+" or op == "-")  prioritat = 5;
+  else if (op == "*" or op == "/")  prioritat = 6;
+  else  prioritat = 7;
+
+  return prioritat;
+
+}
+
 arbre<token> llegir_infixa(){
 
   /* Pre: cert */
@@ -341,7 +360,6 @@ arbre<token> llegir_infixa(){
     /* Inv: */
     if (t == "(")   ops.push(t);
     else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
-    else if (t.es_operador_unari() and t.es_operador_binari())  ops.push(t);
     else if (t == ")"){
       while(ops.top() != "("){
         token p = ops.top();
@@ -354,15 +372,40 @@ arbre<token> llegir_infixa(){
         res.push(arbre<token>(p, a2, a1));
       }
       ops.pop();
+    } else if (t.es_operador_unari() and t.es_operador_binari()){
+        if (not ops.empty() and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
+          token opAux;
+          opAux = ops.top();
+          ops.pop();
+          arbre<token> a1 = res.top();
+          res.pop();
+          arbre<token> a2 = res.top();
+          res.pop();
+
+          res.push(arbre<token>(opAux, a2, a1));
+
+          ops.push(t);
+        } else {
+          ops.push(t);
+        }
     }
 
   }
 
   while (not ops.empty()){
-    token p = ops.top();
+    token op;
+    op = ops.top();
     ops.pop();
-    arbre
+    arbre<token> a1 = res.top();
+    res.pop();
+    arbre<token> a2 = res.top();
+    res.pop();
+
+    res.push(arbre<token>(op, a2, a1));
+
   }
+
+  return res.top();
 
 }
 
