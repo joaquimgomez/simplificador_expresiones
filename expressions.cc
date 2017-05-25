@@ -192,17 +192,21 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
-  if (op == "and" and (b1.arrel() == "F" or b2.arrel() == "F"))   return arbre<token>(token(false));
-  else if (op == "and" and b1.arrel() == "T")   return arbre<token>(b2);
-  else if (op == "and" and b2.arrel() == "T")   return arbre<token>(b1);
-  else if (op == "or" and (b1.arrel() == "T" or b2.arrel() == "T"))   return arbre<token>(token(true));
-  else if (op == "or" and b1.arrel() == "F")  return arbre<token>(b2);
-  else if (op == "or" and b2.arrel() == "F")  return arbre<token>(b1);
-  else if ((op == "and" or op == "or") and equivalents(b1, b2))   return b2;
+  arbre<token> simpl;
+
+  if (op == "and" and (b1.arrel() == "F" or b2.arrel() == "F"))   simpl = arbre<token>(token(false));
+  else if (op == "and" and b1.arrel() == "T")   simpl = arbre<token>(b2);
+  else if (op == "and" and b2.arrel() == "T")   simpl = arbre<token>(b1);
+  else if (op == "or" and (b1.arrel() == "T" or b2.arrel() == "T"))   simpl = arbre<token>(token(true));
+  else if (op == "or" and b1.arrel() == "F")  simpl = arbre<token>(b2);
+  else if (op == "or" and b2.arrel() == "F")  simpl = arbre<token>(b1);
+  else if ((op == "and" or op == "or") and equivalents(b1, b2))   simpl = b2;
   else if (b1.arrel().es_boolea() and b2.arrel().es_boolea()){
-    if (op == "or")   return arbre<token>(token(b1.arrel().to_bool() or b2.arrel().to_bool()));
-    else if (op == "and") return arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
-  } else  return arbre<token>(op, b1, b2);
+    if (op == "or")   simpl = arbre<token>(token(b1.arrel().to_bool() or b2.arrel().to_bool()));
+    else if (op == "and") simpl = arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
+  } else  simpl = arbre<token>(op, b1, b2);
+
+  return simpl;
 
 }
 
@@ -211,16 +215,20 @@ arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<to
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
+  arbre<token> simpl;
+
   if (equivalents(b1, b2)){
-    if (op == "==")   return arbre<token>(token(true));
-    else if (op == "!=")  return arbre<token>(token(false));
+    if (op == "==")   simpl = arbre<token>(token(true));
+    else if (op == "!=")  simpl = arbre<token>(token(false));
   } else if ((b1.arrel().es_enter() and b2.arrel().es_enter()) or (b1.arrel().es_boolea() and b2.arrel().es_boolea())){
-    if (op == "==")   return arbre<token>(token(b1.arrel() == b2.arrel()));
-    else if (op == "!=")  return arbre<token>(token(b1.arrel() != b2.arrel()));
-  } else  return arbre<token>(op, b1, b2);
+    if (op == "==")   simpl = arbre<token>(token(b1.arrel() == b2.arrel()));
+    else if (op == "!=")  simpl = arbre<token>(token(b1.arrel() != b2.arrel()));
+  } else  simpl = arbre<token>(op, b1, b2);
 
   /* ¿¿¿¿¿ Heu de tenir en compte que l'operació == o != entre dues variables només es simplifica si són
      la mateixa variable. Si les variables són diferents no es pot simplificar.  ???? */
+
+  return simpl;
 
 }
 
@@ -228,8 +236,6 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
 
   /* Pre: op = OP, b1 = B1, b2 = B2 */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
-
-  cout << "NOOO ES AQUII!" << endl;
 
   arbre<token> simpl;
 
@@ -387,7 +393,7 @@ arbre<token> llegir_infixa(){
       ops.pop();
 
     } else if (t.es_operador_unari() or t.es_operador_binari()){
-      if (ops.size() > 1 and ops.top() != "(" and not ops.empty() and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
+      if (ops.size() > 1 and ops.top() != "(" and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
         token opAux = ops.top();
         ops.pop();
 
@@ -399,9 +405,7 @@ arbre<token> llegir_infixa(){
         res.push(arbre<token>(opAux, a2, a1));
       }
 
-
       ops.push(t);
-
 
     }
 
@@ -455,7 +459,7 @@ int main(){
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
 
-    cout << a << endl;
+    //cout << a << endl;
 
     //simpl = simplificar(a);
     //cout << simpl << endl;
