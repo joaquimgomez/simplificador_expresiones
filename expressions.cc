@@ -294,8 +294,6 @@ arbre<token> simplificar(arbre<token> a){
   while(not l.empty()){
     /* Inv: */
 
-    cout << "AQUI ES" << endl;
-
     if (not (*(l.begin())).es_operador_unari() and not (*(l.begin())).es_operador_binari()){
       p.push(*(l.begin()));
       l.erase(l.begin());
@@ -362,87 +360,10 @@ arbre<token> llegir_infixa(){
   token t;
   while (cin >> t and t != "->"){
     /* Inv: */
+
     if (t == "(")   ops.push(t);
-    else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
+    else if (not t.es_operador_unari() and not t.es_operador_binari() and t != ")")   res.push(arbre<token>(t));
     else if (t == ")"){
-      while(ops.top() != "("){
-        token p = ops.top();
-        ops.pop();
-        arbre<token> a1 = res.top();
-        res.pop();
-        arbre<token> a2 = res.top();
-        res.pop();
-
-        res.push(arbre<token>(p, a2, a1));
-      }
-      ops.pop();
-    } else if (t.es_operador_unari() or t.es_operador_binari()){
-        if (not ops.empty() and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
-          token opAux;
-          opAux = ops.top();
-          ops.pop();
-          arbre<token> a1 = res.top();
-          res.pop();
-          arbre<token> a2 = res.top();
-          res.pop();
-
-          res.push(arbre<token>(opAux, a2, a1));
-
-          ops.push(t);
-        } else {
-          ops.push(t);
-        }
-    }
-
-  }
-
-  while (not ops.empty()){
-    /* Inv: */
-    token op;
-    op = ops.top();
-    ops.pop();
-    arbre<token> a1 = res.top();
-    res.pop();
-    arbre<token> a2 = res.top();
-    res.pop();
-
-    res.push(arbre<token>(op, a2, a1));
-
-  }
-
-  return res.top();
-
-}
-
-arbre<token> llegir_infixa_n(){
-
-  /* Pre: cert */
-  /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
-           canal estandar cin */
-
-  stack<token> ops;
-  stack<arbre<token> > res;
-
-  cout << "funcion" << endl;
-
-  token t;
-  while (cin >> t and t != "->"){
-    /* Inv: */
-
-    cout << "while" << endl;
-
-    if (t == "("){
-      ops.push(t);
-      cout << "t = (" << endl;
-    }
-    else if (not t.es_operador_unari() and not t.es_operador_binari() and t != ")"){
-      res.push(arbre<token>(t));
-      cout << "operand" << endl;
-    }
-    else if (t == ")"){
-
-      cout << "t == )" << endl;
-
       while (ops.top() != "("){
         /* Inv: */
         arbre<token> a1, a2;
@@ -466,11 +387,7 @@ arbre<token> llegir_infixa_n(){
       ops.pop();
 
     } else if (t.es_operador_unari() or t.es_operador_binari()){
-
-      cout << "operador" << endl;
-
-      if (ops.top() != "(" and not ops.empty() and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
-        cout << "especial" << endl;
+      if (ops.size() > 1 and ops.top() != "(" and not ops.empty() and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
         token opAux = ops.top();
         ops.pop();
 
@@ -490,11 +407,9 @@ arbre<token> llegir_infixa_n(){
 
   }
 
-  cout << "fin while" << endl;
-
   while (not ops.empty()){
-    if (ops.top() == "(")   ops.pop();
-    else {
+
+    if (ops.top() != "(") {
       arbre<token> a1, a2;
 
       if (ops.top().es_operador_unari()){
@@ -506,10 +421,12 @@ arbre<token> llegir_infixa_n(){
         res.pop();
         a2 = res.top();
         res.pop();
-        res.push(arbre<token>(ops.top(), a1, a2));
+        res.push(arbre<token>(ops.top(), a2, a1));
       }
 
     }
+
+    ops.pop();
 
   }
 
@@ -536,20 +453,20 @@ int main(){
       cin >> item;
 
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
-    else  a = llegir_infixa_n();
+    else  a = llegir_infixa();
 
     cout << a << endl;
 
-    simpl = simplificar(a);
-    cout << simpl << endl;
+    //simpl = simplificar(a);
+    //cout << simpl << endl;
 
     // SI NO INTRODUCE NADA?
 
     cin >> form2;
 
-    if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
-    else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
-    else res = expressio_infixa(simpl);
+    if (form2 == "PREFIXA") res = expressio_prefixa(a);
+    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
+    else res = expressio_infixa(a);
 
     cout << res << endl;
   }
