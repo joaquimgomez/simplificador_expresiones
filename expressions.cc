@@ -459,7 +459,7 @@ int main(){
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
 
-    //cout << a << endl;
+    cout << a << endl;
 
     //simpl = simplificar(a);
     //cout << simpl << endl;
