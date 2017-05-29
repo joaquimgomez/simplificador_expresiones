@@ -376,19 +376,17 @@ arbre<token> llegir_infixa(){
         /* Inv: */
 
         if (ops.top().es_operador_unari()){
-          token opAux = ops.top();
           arbre<token> a1 = res.top();
           res.pop();
 
-          res.push(arbre<token>(opAux, a1, arbre<token>()));
+          res.push(arbre<token>(t, a1, arbre<token>()));
         } else {
-          token opAux = ops.top();
           arbre<token> a1 = res.top();
           res.pop();
           arbre<token> a2 = res.top();
           res.pop();
 
-          res.push(arbre<token>(opAux, a2, a1));
+          res.push(arbre<token>(t, a2, a1));
         }
 
         ops.pop();
@@ -406,10 +404,9 @@ arbre<token> llegir_infixa(){
       res.pop();
 
       res.push(arbre<token>(opNot, a1, arbre<token>()));
-      
     }
 
-    else if (t.es_operador_unari() or t.es_operador_binari()){
+    else{
       if (ops.size() > 1 and ops.top() != "("){
         if (t == "**"){
           arbre<token> a1 = res.top();
@@ -478,6 +475,7 @@ arbre<token> llegir_infixa(){
   return res.top();
 
 }
+
 
 int main(){
 
