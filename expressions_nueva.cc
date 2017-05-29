@@ -367,52 +367,74 @@ arbre<token> llegir_infixa(){
   while (cin >> t and t != "->"){
     /* Inv: */
 
+    //cout << "while" << endl;
+
     if (t == "(")   ops.push(t);
-    else if (not t.es_operador_unari() and not t.es_operador_binari() and t != ")")   res.push(arbre<token>(t));
-    else if (t == ")"){
+    else if (t == ")") {
       while (ops.top() != "("){
         /* Inv: */
-        arbre<token> a1, a2;
-        token op = ops.top();
-        ops.pop();
 
-        if (op.es_operador_unari()){
-          a1 = res.top();
+        if (ops.top().es_operador_unari()){
+          arbre<token> a1 = res.top();
           res.pop();
-          res.push(arbre<token>(op, a1, arbre<token>()));
+
+          res.push(arbre<token>(t, a1, arbre<token>()));
         } else {
-          a1 = res.top();
+          arbre<token> a1 = res.top();
           res.pop();
-          a2 = res.top();
+          arbre<token> a2 = res.top();
           res.pop();
-          res.push(arbre<token>(op, a2, a1));
+
+          res.push(arbre<token>(t, a2, a1));
         }
+
+        ops.pop();
 
       }
 
       ops.pop();
 
-    } else if (t.es_operador_unari() or t.es_operador_binari()){
-      if (ops.size() > 1 and ops.top() != "(" and t != "not" and t != "**" and prioritat_token(t) <= prioritat_token(ops.top())){
-        token opAux = ops.top();
-        ops.pop();
+    } else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(t);
+    else {
+      if (ops.size() > 1 and ops.top() != "("){
+        if (t == "**"){
+          arbre<token> a1 = res.top();
+          res.pop();
+          arbre<token> a2 = res.top();
+          res.pop();
 
-        arbre<token> a1 = res.top();
-        res.pop();
-        arbre<token> a2 = res.top();
-        res.pop();
+          res.push(arbre<token>(t, a2, a1));
+        } else if (t == "not" and prioritat_token(t) > prioritat_token(ops.top())) {
+          arbre<token> a1 = res.top();
+          res.pop();
 
-        res.push(arbre<token>(opAux, a2, a1));
-      }
 
-      ops.push(t);
+
+          res.push(arbre<token>(t, a1, arbre<token>()));
+        } else if (prioritat_token(t) <= prioritat_token(ops.top())){
+          token opAux = ops.top();
+          ops.pop();
+
+          arbre<token> a1 = res.top();
+          res.pop();
+          arbre<token> a2 = res.top();
+          res.pop();
+
+          res.push(arbre<token>(opAux, a2, a1));
+
+          ops.push(t);
+
+        } else  ops.push(t);
+
+      } else  ops.push(t);
 
     }
+
+    if (not res.empty())   cout << res.top() << endl;
 
   }
 
   while (not ops.empty()){
-
     if (ops.top() != "(") {
       arbre<token> a1, a2;
 
@@ -437,6 +459,7 @@ arbre<token> llegir_infixa(){
   return res.top();
 
 }
+
 
 
 int main(){
