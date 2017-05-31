@@ -1,0 +1,24 @@
+-1234567890 
+T 
+x
+-1234567890 
+T 
+x
+not not not a 
+a not not not 
+(not (not (not a)))
+not not not not a 
+a not not not not 
+(not (not (not (not a))))
+and or == != a b c d e 
+a b != c == d or e and 
+((((a != b) == c) or d) and e)
+and aa or bb == cc != dd ee 
+aa bb cc dd ee != == or and 
+(aa and (bb or (cc == (dd != ee))))
++ - * / a b c d e 
+a b / c * d - e + 
+((((a / b) * c) - d) + e)
++ a1 - b2 * c3 / d4 e5 
+a1 b2 c3 d4 e5 / * - + 
+(a1 + (b2 - (c3 * (d4 / e5))))

@@ -1,0 +1,211 @@
+3
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 1
+És una variable: 0
+Valor enter: 3
+Valor string: 3
+=============================
+T
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 1
+És un valor enter: 0
+És una variable: 0
+Valor booleà: 1
+Valor string: T
+=============================
+F
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 1
+És un valor enter: 0
+És una variable: 0
+Valor booleà: 0
+Valor string: F
+=============================
+x
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 1
+Valor string: x
+=============================
+x1
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 1
+Valor string: x1
+=============================
+-459
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 1
+És una variable: 0
+Valor string: -459
+=============================
+T i T són iguals: 1
+T i F són iguals: 0
+T i T són diferents: 0
+T i F són diferents: 1
+=============================
+x i x són iguals: 1
+x i y són iguals: 0
+x i x són diferents: 0
+x i y són diferents: 1
+=============================
+3
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 1
+És una variable: 0
+Valor string: 3
+=============================
+T
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 1
+És un valor enter: 0
+És una variable: 0
+Valor string: T
+=============================
+F
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 1
+És un valor enter: 0
+És una variable: 0
+Valor string: F
+=============================
+x
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 1
+Valor string: x
+=============================
+x1
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 1
+Valor string: x1
+=============================
+-459
+És un operador unari: 0
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 1
+És una variable: 0
+Valor string: -459
+=============================
+not
+És un operador unari: 1
+És un operador binari: 0
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: not
+=============================
+and
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: and
+=============================
+or
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: or
+=============================
+==
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: ==
+=============================
+!=
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: !=
+=============================
++
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: +
+=============================
+-
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: -
+=============================
+*
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 1
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: *
+=============================
+/
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: /
+=============================
+**
+És un operador unari: 0
+És un operador binari: 1
+És un operador commutatiu: 0
+És un valor booleà: 0
+És un valor enter: 0
+És una variable: 0
+Valor string: **
+=============================

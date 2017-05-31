@@ -12,4 +12,3 @@ POSTFIXA 3 5 + x == 3 4 - x * 8 != not or -> POSTFIXA
 POSTFIXA 12 9 - 23 5 + -2 * / -> INFIXA
 PREFIXA and and and a b and c d and and c d and a b -> PREFIXA
 PREFIXA and and and a b and c e and and c d and a b -> PREFIXA
-

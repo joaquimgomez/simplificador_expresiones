@@ -175,4 +175,3 @@ INFIXA not ( c and d ) and not ( a and b ) -> POSTFIXA
 INFIXA not not ( c and d ) and not not ( a and b ) -> POSTFIXA
 INFIXA not c and not d and not a and not b -> POSTFIXA
 INFIXA not not c and not not d and not not a and not not b -> POSTFIXA
-
