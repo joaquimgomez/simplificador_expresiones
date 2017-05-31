@@ -12,7 +12,9 @@ token::token(int i){
   /* Pre: cert */
   /* Post: crea un token a partir de l'enter i */
 
-  t = ::to_string(i);   // Funció de la STL que converteix un int a string.
+  stringstream ss;
+  ss << i;
+  t = ss.str();
 
 }
 
@@ -85,7 +87,7 @@ int token::to_int() const{
   /* Pre: el p.i. és un enter */
   /* Post: retorna el valor enter del p.i. */
 
-  return stoi(t);   // Funció de la STL que converteix un string a int.
+  return atoi(t.c_str());
 
 }
 

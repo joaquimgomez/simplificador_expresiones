@@ -1,5 +1,7 @@
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <cstdlib>
+#include <string>
 using namespace std;
 
 class token{
