@@ -370,7 +370,6 @@ arbre<token> llegir_infixa(){
       else if (t == ")"){
         while (ops.top() != "("){
           /* Inv: */
-          cout << ")" << endl;
           if (ops.top().es_operador_unari()){
             arbre<token> a1 = res.top();
             res.pop();
@@ -396,8 +395,6 @@ arbre<token> llegir_infixa(){
         if (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
           token op = ops.top();
           ops.pop();
-
-
 
           if (op.es_operador_unari()){
             arbre<token> a1 = res.top();
@@ -470,18 +467,18 @@ int main(){
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
 
-    cout << a << endl;
+    //cout << a << endl;
 
-    //simpl = simplificar(a);
+    simpl = simplificar(a);
     //cout << simpl << endl;
 
     // SI NO INTRODUCE NADA?
 
     cin >> form2;
 
-    if (form2 == "PREFIXA") res = expressio_prefixa(a);
-    else if (form2 == "POSTFIXA") res = expressio_postfixa(a);
-    else res = expressio_infixa(a);
+    if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
+    else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
+    else res = expressio_infixa(simpl);
 
     cout << res << endl;
   }
