@@ -177,7 +177,7 @@ bool equivalents(arbre<token> a, arbre<token> b){
 
 arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
-  /* Pre: op = OP, b = B */
+  /* Pre: op = OP, b = B ja simplificat */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   if (b.arrel().es_boolea())  return arbre<token>(token(not b.arrel().to_bool()));
@@ -188,7 +188,7 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
 arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
+  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
@@ -211,7 +211,7 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
 
 arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
+  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
@@ -233,7 +233,7 @@ arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<to
 
 arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1, b2 = B2 */
+  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
@@ -303,8 +303,6 @@ arbre<token> simplificar(arbre<token> a){
 
   while (not l.empty()){
     /* Inv: */
-    /*cout << "WHILE 2 SIMPLIFICAR" << endl;
-    cout << *(l.begin()) << endl;*/
 
     if (not (*(l.begin())).arrel().es_operador_unari() and not (*(l.begin())).arrel().es_operador_binari()){
       p.push(*(l.begin()));
@@ -341,69 +339,6 @@ arbre<token> simplificar(arbre<token> a){
 
 }
 
-arbre<token> simplificar_2(arbre<token> a){
-
-  /* Pre: a = A */
-  /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
-
-  stack<arbre<token> > p;
-  p.push(a);
-
-  list<token> l;
-  while (not p.empty()){
-    /* Inv: a1 = "part d'A que s'està tractant actualment",
-       p = "elements d'A que queden per analitzar" i
-       l = "elements d'A que ja s'han recollit". */
-
-    arbre<token> a1 = p.top();
-    p.pop();
-
-    if (not a1.es_buit()){
-      l.insert(l.begin(), a1.arrel());
-      if (not a1.fe().es_buit())  p.push(a1.fe());
-      if (not a1.fd().es_buit())  p.push(a1.fd());
-    }
-
-  }
-
-  while(not l.empty()){
-    /* Inv: */
-
-    if (not (*(l.begin())).es_operador_unari() and not (*(l.begin())).es_operador_binari()){
-      p.push(*(l.begin()));
-      l.erase(l.begin());
-
-    } else if ((*(l.begin())).es_operador_binari()){
-      token op = *(l.begin());
-      l.erase(l.begin());
-
-      arbre<token> a1, a2;
-      a1 = p.top();
-      p.pop();
-      a2 = p.top();
-      p.pop();
-
-      if (op == "and" or op == "or")  p.push(simplificar_operador_boolea(op, a2, a1));
-      else if (op == "==" or op == "!=")  p.push(simplificar_operador_comparacio(op, a2, a1));
-      else  p.push(simplificar_operador_aritmetic(op, a2, a1));
-
-    } else {
-      token op = *(l.begin());
-      l.erase(l.begin());
-
-      arbre<token> a1 = p.top();
-      p.pop();
-
-      p.push(simplificar_operador_unari(op, a1));
-
-    }
-
-  }
-
-  return p.top();
-
-}
-
 int prioritat_token(token op){
 
   // Pre: op és un operador aritmétic
@@ -425,93 +360,93 @@ int prioritat_token(token op){
 
 arbre<token> llegir_infixa(){
 
-    /* Pre: cert */
-    /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
-             canal estandar cin */
+  /* Pre: cert */
+  /* Post: retorna un arbre amb l'expressió en notació infixa rebuda pel
+            canal estandar cin */
 
-    stack<token> ops;
-    stack<arbre<token> > res;
+  stack<token> ops;
+  stack<arbre<token> > res;
 
-    token t;
-    while(cin >> t and t != "->"){
-      /* Inv: */
-      if (t == "(")   ops.push(t);
-      else if (t == ")"){
-        while (ops.top() != "("){
-          /* Inv: */
-          if (ops.top().es_operador_unari()){
-            arbre<token> a1 = res.top();
-            res.pop();
+  token t;
+  while(cin >> t and t != "->"){
+    /* Inv: */
+    if (t == "(")   ops.push(t);
+    else if (t == ")"){
+      while (ops.top() != "("){
+        /* Inv: */
+        if (ops.top().es_operador_unari()){
+          arbre<token> a1 = res.top();
+          res.pop();
 
-            res.push(arbre<token>(ops.top(), a1, arbre<token>()));
-          } else {
-            arbre<token> a1 = res.top();
-            res.pop();
-            arbre<token> a2 = res.top();
-            res.pop();
+          res.push(arbre<token>(ops.top(), a1, arbre<token>()));
+        } else {
+          arbre<token> a1 = res.top();
+          res.pop();
+          arbre<token> a2 = res.top();
+          res.pop();
 
-            res.push(arbre<token>(ops.top(), a2, a1));
-          }
-
-          ops.pop();
-
+          res.push(arbre<token>(ops.top(), a2, a1));
         }
 
         ops.pop();
-
-      } else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
-      else {
-        if (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
-          token op = ops.top();
-          ops.pop();
-
-          if (op.es_operador_unari()){
-            arbre<token> a1 = res.top();
-            res.pop();
-
-            res.push(arbre<token>(op, a1, arbre<token>()));
-          } else {
-            arbre<token> a1 = res.top();
-            res.pop();
-            arbre<token> a2 = res.top();
-            res.pop();
-
-            res.push(arbre<token>(op, a2, a1));
-          }
-
-        }
-
-        ops.push(t);
-
-      }
-
-    }
-
-
-    while (not ops.empty()){
-      /* Inv: */
-      if (ops.top() != "("){
-        arbre<token> a1, a2;
-
-        if (ops.top().es_operador_unari()){
-          a1 = res.top();
-          res.pop();
-          res.push(arbre<token>(ops.top(), a1, arbre<token>()));
-        } else {
-          a1 = res.top();
-          res.pop();
-          a2 = res.top();
-          res.pop();
-          res.push(arbre<token>(ops.top(), a2, a1));
-        }
 
       }
 
       ops.pop();
 
+    } else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
+    else {
+      if (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
+        token op = ops.top();
+        ops.pop();
+
+        if (op.es_operador_unari()){
+          arbre<token> a1 = res.top();
+          res.pop();
+
+          res.push(arbre<token>(op, a1, arbre<token>()));
+        } else {
+          arbre<token> a1 = res.top();
+          res.pop();
+          arbre<token> a2 = res.top();
+          res.pop();
+
+          res.push(arbre<token>(op, a2, a1));
+        }
+
+      }
+
+      ops.push(t);
+
     }
 
-    return res.top();
+  }
+
+
+  while (not ops.empty()){
+      /* Inv: */
+    if (ops.top() != "("){
+      arbre<token> a1, a2;
+
+      if (ops.top().es_operador_unari()){
+        a1 = res.top();
+        res.pop();
+        res.push(arbre<token>(ops.top(), a1, arbre<token>()));
+      } else {
+        a1 = res.top();
+        res.pop();
+        a2 = res.top();
+        res.pop();
+        res.push(arbre<token>(ops.top(), a2, a1));
+      }
+
+    }
+
+    ops.pop();
+
+  }
+
+  return res.top();
 
 }
 
@@ -535,21 +470,17 @@ int main(){
 
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
-
-    cout << a << endl;
+    //cout << a << endl;
 
     simpl = simplificar(a);
-    cout << simpl << endl;
-
-    // SI NO INTRODUCE NADA?
+    //cout << simpl << endl;
 
     cin >> form2;
-
     if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
     else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
     else res = expressio_infixa(simpl);
-
     cout << res << endl;
+
   }
 
 }
