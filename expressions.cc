@@ -105,7 +105,7 @@ arbre<token> llegir_prefixa(){
   if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);  // Cas Basic: t no és un operador.
   else {
     if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());   // Cas Recursiu 1: t és un operador unari.
-    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa());   // Cas Recursiu 2: t és un poperador binari
+    else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa()); // Cas Recursiu 2: t és un poperador binari
   }
 
   /* HI: es retorna un subarbre a partir de l'expressió llegida pel canal estandar cin */
@@ -180,10 +180,16 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
   /* Pre: op = OP, b = B */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
+  if (b.arrel().es_boolea())  return arbre<token>(token(not b.arrel().to_bool()));
+  else if (b.arrel() == "not")  return b.fe();
+  else  return arbre<token>(op, b, arbre<token>());
+
+  /* VERSIÓN ANTERIOR:
+
   if (b.arrel() == "F")  return arbre<token>(token(true));
   else if (b.arrel() == "T")   return arbre<token>(token(false));
   else if (b.arrel() == "not") return b.fe();
-  else return arbre<token>(op, b, arbre<token>());
+  else return arbre<token>(op, b, arbre<token>()); */
 
 }
 
@@ -247,24 +253,29 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
     else if (op == "**")  simpl = arbre<token>(token((int) pow(b1.arrel().to_int(), b2.arrel().to_int())));
   } else if (not b1.arrel().es_enter() or not b2.arrel().es_enter()){
     if (op == "*"){
-      if (b1.arrel() == "0" or b2.arrel() == "0")   simpl = arbre<token>(token());
+      if (b1.arrel() == "0" or b2.arrel() == "0")   simpl = arbre<token>(token(0));
       else if (b1.arrel() == "1")   simpl = b2;
       else if (b2.arrel() == "1")   simpl = b1;
+      else  simpl = arbre<token>(op, b1, b2);
     } else if (op == "+"){
       if (b1.arrel() == "0")  simpl = b2;
       else if (b2.arrel() == "0")   simpl = b1;
+      else  simpl = arbre<token>(op, b1, b2);
     } else if (op == "-"){
       if (b2.arrel() == "0")  simpl = b1;
-      else if (equivalents(b1, b2))   simpl = arbre<token>(token());
+      else if (equivalents(b1, b2))   simpl = arbre<token>(token(0));
+      else  simpl = arbre<token>(op, b1, b2);
     } else if (op == "/"){
-      if (b1.arrel() == "0")  simpl = arbre<token>(token());
+      if (b1.arrel() == "0")  simpl = arbre<token>(token(0));
       else if (b2.arrel() == "1")  simpl = b1;
       else if (equivalents(b1, b2))   simpl = arbre<token>(token(1));
+      else  simpl = arbre<token>(op, b1, b2);
     } else if (op == "**"){
-      if (b1.arrel() == "0")  simpl = arbre<token>(token());
+      if (b1.arrel() == "0")  simpl = arbre<token>(token(0));
       else if (b1.arrel() == "1")   simpl = arbre<token>(token(1));
       else if (b2.arrel() == "0")   simpl = arbre<token>(token(1));
       else if (b2.arrel() == "1")   simpl = b1;
+      else  simpl = arbre<token>(op, b1, b2);
     }
   } else simpl = arbre<token>(op, b1, b2);
 
@@ -273,6 +284,71 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
 }
 
 arbre<token> simplificar(arbre<token> a){
+
+  /* Pre: a = A */
+  /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
+
+  stack<arbre<token> > p;
+  p.push(a);
+
+  list<arbre<token> > l;
+  while (not p.empty()){
+    /* Inv: a1 = "part d'A que s'està tractant actualment",
+       p = "elements d'A que queden per analitzar" i
+       l = "elements d'A que ja s'han recollit". */
+
+    arbre<token> a1 = p.top();
+    p.pop();
+
+    if (not a1.es_buit()){
+      l.insert(l.begin(), arbre<token>(a1.arrel()));
+      if (not a1.fe().es_buit())  p.push(a1.fe());
+      if (not a1.fd().es_buit())  p.push(a1.fd());
+    }
+
+  }
+
+  while (not l.empty()){
+    /* Inv: */
+    /*cout << "WHILE 2 SIMPLIFICAR" << endl;
+    cout << *(l.begin()) << endl;*/
+
+    if (not (*(l.begin())).arrel().es_operador_unari() and not (*(l.begin())).arrel().es_operador_binari()){
+      p.push(*(l.begin()));
+      l.erase(l.begin());
+
+    } else if ((*(l.begin())).arrel().es_operador_binari()){
+      token op = (*(l.begin())).arrel();
+      l.erase(l.begin());
+
+      arbre<token> a1, a2;
+      a1 = p.top();
+      p.pop();
+      a2 = p.top();
+      p.pop();
+
+      if (op == "and" or op == "or")  p.push(simplificar_operador_boolea(op, a2, a1));
+      else if (op == "==" or op == "!=")  p.push(simplificar_operador_comparacio(op, a2, a1));
+      else  p.push(simplificar_operador_aritmetic(op, a2, a1));
+
+    } else {
+      token op = (*(l.begin())).arrel();
+      l.erase(l.begin());
+
+      arbre<token> a1 = p.top();
+      p.pop();
+
+      p.push(simplificar_operador_unari(op, a1));
+
+    }
+
+  }
+
+  return p.top();
+
+}
+
+arbre<token> simplificar_2(arbre<token> a){
 
   /* Pre: a = A */
   /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
@@ -337,8 +413,8 @@ arbre<token> simplificar(arbre<token> a){
 
 int prioritat_token(token op){
 
-  // Pre:
-  // Post:
+  // Pre: op és un operador aritmétic
+  // Post: retorna la prioritat de l'operador
 
   int prioritat;
 
