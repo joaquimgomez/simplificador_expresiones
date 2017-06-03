@@ -184,13 +184,6 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
   else if (b.arrel() == "not")  return b.fe();
   else  return arbre<token>(op, b, arbre<token>());
 
-  /* VERSIÓN ANTERIOR:
-
-  if (b.arrel() == "F")  return arbre<token>(token(true));
-  else if (b.arrel() == "T")   return arbre<token>(token(false));
-  else if (b.arrel() == "not") return b.fe();
-  else return arbre<token>(op, b, arbre<token>()); */
-
 }
 
 arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
@@ -483,7 +476,7 @@ arbre<token> llegir_infixa(){
             arbre<token> a2 = res.top();
             res.pop();
 
-            res.push(arbre<token>(op, a1, a2));
+            res.push(arbre<token>(op, a2, a1));
           }
 
         }
@@ -543,10 +536,10 @@ int main(){
     } else if (form1 == "POSTFIXA") a = llegir_postfixa();
     else  a = llegir_infixa();
 
-    //cout << a << endl;
+    cout << a << endl;
 
     simpl = simplificar(a);
-    //cout << simpl << endl;
+    cout << simpl << endl;
 
     // SI NO INTRODUCE NADA?
 
