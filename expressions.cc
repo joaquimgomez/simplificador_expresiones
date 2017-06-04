@@ -396,7 +396,8 @@ arbre<token> llegir_infixa(){
 
     } else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
     else {
-      if (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
+      while (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
+        /* Inv: */
         token op = ops.top();
         ops.pop();
 
