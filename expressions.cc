@@ -20,7 +20,8 @@ string expressio_prefixa(arbre<token> a){
   while(not p.empty()){
     /* Inv: a1 = "part d'A que s'està tractant actualment",
        p = "elements d'A que queden per analitzar" i
-       ExpPre = "expressió resultant de la part analitzada d'A". */
+       ExpPre = "expressió resultant de la part analitzada d'A" */
+    /* Funció de fita: tamany de p (p.size()) */
 
     arbre<token> a1 = p.top();
     p.pop();
@@ -50,13 +51,15 @@ string expressio_postfixa(arbre<token> a){
   while (not p.empty()){
     /* Inv: a1 = "part d'A que s'està tractant actualment",
        p = "elements d'A que queden per analitzar" i
-       l = "elements d'A que ja s'han recollit". */
+       l = "elements d'A que ja s'han recollit" */
+    /* Funció de fita: tamany de p (p.size()) */
 
     arbre<token> a1 = p.top();
     p.pop();
 
     if (not a1.es_buit()){
       l.insert(l.begin(), a1.arrel());
+
       if (not a1.fe().es_buit())  p.push(a1.fe());
       if (not a1.fd().es_buit())  p.push(a1.fd());
     }
@@ -66,7 +69,9 @@ string expressio_postfixa(arbre<token> a){
   string ExpPos;
   while (not l.empty()){
     /* Inv: ExpPos = "expressió resultat de la part analitzada de l" i
-       l = "elements que queden per tractar". */
+       l = "elements que queden per tractar" */
+    /* Funció de fita: tamany de l (l.size()) */
+
     ExpPos += (*(l.begin())).to_string() + " ";
     l.erase(l.begin());
   }
@@ -83,9 +88,11 @@ string expressio_infixa(arbre<token> a){
   string ExpInf;
   if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())   ExpInf = a.arrel().to_string();   // Cas Basic: t no és un operador, aleshores és una fulla.
   else if (not a.fd().es_buit() and not a.fe().es_buit())  ExpInf = "(" + expressio_infixa(a.fe()) + " " + a.arrel().to_string() + " " + expressio_infixa(a.fd()) + ")";  // Cas Recursiu 1: t és un operador binari.
+  /* HI1: ExpInf = "expressió infixa generada a partir del fill esquerre d'A" */
+  /* HI2: ExpInf = "expressió infixa generada a partir del fill dret d'A" */
   else  ExpInf = "(" + a.arrel().to_string() + " " + expressio_infixa(a.fe()) + ")";  // Cas Recursiu 2: t és un operador unari.
+  /* HI3: ExpInf = "expressió infixa generada a partir del fill esquerre d'A" */
 
-  /* HI: ExpInf = "expressió infixa generada a partir d'A" */
   /* Funció de fita: nombre d'elements d'A */
 
   return ExpInf;
@@ -105,10 +112,12 @@ arbre<token> llegir_prefixa(){
   if (not t.es_operador_binari() and not t.es_operador_unari())  return arbre<token>(t);  // Cas Basic: t no és un operador.
   else {
     if (t.es_operador_unari())  return arbre<token>(t, llegir_prefixa(), arbre<token>());   // Cas Recursiu 1: t és un operador unari.
+    /* HI1: es retorna un subarbre esquerre a partir de l'expressió llegida pel canal estandar cin */
     else  return arbre<token>(t, llegir_prefixa(), llegir_prefixa()); // Cas Recursiu 2: t és un poperador binari
+    /* HI2: es retorna un subarbre esquerre a partir de l'expressió llegida pel canal estandar cin */
+    /* HI3: es retorna un subarbre dret a partir de l'expressió llegida pel canal estandar cin */
   }
 
-  /* HI: es retorna un subarbre a partir de l'expressió llegida pel canal estandar cin */
   /* Funció de fita: contingut al canal estandar cin */
 
 }
@@ -126,6 +135,7 @@ arbre<token> llegir_postfixa(){
     /* Inv: t = "token actual que s'ha d'introduir a l'arbre",
        p = "subarbres ja costruits" i
        a = a1 = a2 = "subarbre que s'està construint actualment" */
+    /* Funció de fita: tamany del flux del canal d'entrada estandar cin */
 
     if (not t.es_operador_unari() and not t.es_operador_binari()){
       p.push(arbre<token>(t));
@@ -163,13 +173,16 @@ bool equivalents(arbre<token> a, arbre<token> b){
     if (a.arrel() != b.arrel())   eq = false;
     else {
       if (a.arrel().es_operador_unari())  eq = equivalents(a.fe(), b.fe());
+      /* HI1: eq ens diu si els fills esquerres d'A i de B son equivalents */
       else if (a.arrel().es_operador_commutatiu())   eq = (equivalents(a.fd(), b.fd()) and equivalents(a.fe(), b.fe())) or (equivalents(a.fd(), b.fe()) and equivalents(a.fe(), b.fd()));
+      /* HI2: eq ens diu si els fills drets d'A i de B son equivalents i els fills esquerres d'A i de B son equivalents, alhora
+         o si el fill dret d'A i el fill esquerre de B son equivalents i el fill esquerre d'A i el fill dret de B son equivalents, alhora */
       else  eq = equivalents(a.fe(), b.fe()) and equivalents(a.fd(), b.fd());
+      /* HI3: eq ens diu si els fills esquerres d'A i de B son equivalents i els fills drets d'A i de B son equivalents, alhora */
     }
   }
 
-  /* HI: */
-  /* Funció de Fita: */
+  /* Funció de Fita: tamany d'A i de B */
 
   return eq;
 
@@ -177,7 +190,7 @@ bool equivalents(arbre<token> a, arbre<token> b){
 
 arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
-  /* Pre: op = OP, b = B ja simplificat */
+  /* Pre: op = OP operador unari i b = B arbre ja simplificat */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   if (b.arrel().es_boolea())  return arbre<token>(token(not b.arrel().to_bool()));
@@ -188,7 +201,7 @@ arbre<token> simplificar_operador_unari(token op, arbre<token> b){
 
 arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
+  /* Pre: op = OP operador boolea, b1 = B1 i b2 = B2 arbres ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
@@ -202,7 +215,8 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
   else if ((op == "and" or op == "or") and equivalents(b1, b2))   simpl = b2;
   else if (b1.arrel().es_boolea() and b2.arrel().es_boolea()){
     if (op == "or")   simpl = arbre<token>(token(b1.arrel().to_bool() or b2.arrel().to_bool()));
-    else if (op == "and") simpl = arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
+    else  simpl = arbre<token>(token(b1.arrel().to_bool() and b2.arrel().to_bool()));
+
   } else  simpl = arbre<token>(op, b1, b2);
 
   return simpl;
@@ -211,21 +225,20 @@ arbre<token> simplificar_operador_boolea(token op, arbre<token> b1, arbre<token>
 
 arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
+  /* Pre: op = OP operador de comparació, b1 = B1 i b2 = B2 arbres ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
 
   if (equivalents(b1, b2)){
     if (op == "==")   simpl = arbre<token>(token(true));
-    else if (op == "!=")  simpl = arbre<token>(token(false));
+    else  simpl = arbre<token>(token(false));
+
   } else if ((b1.arrel().es_enter() and b2.arrel().es_enter()) or (b1.arrel().es_boolea() and b2.arrel().es_boolea())){
     if (op == "==")   simpl = arbre<token>(token(b1.arrel() == b2.arrel()));
-    else if (op == "!=")  simpl = arbre<token>(token(b1.arrel() != b2.arrel()));
-  } else  simpl = arbre<token>(op, b1, b2);
+    else  simpl = arbre<token>(token(b1.arrel() != b2.arrel()));
 
-  /* ¿¿¿¿¿ Heu de tenir en compte que l'operació == o != entre dues variables només es simplifica si són
-     la mateixa variable. Si les variables són diferents no es pot simplificar.  ???? */
+  } else  simpl = arbre<token>(op, b1, b2);
 
   return simpl;
 
@@ -233,7 +246,7 @@ arbre<token> simplificar_operador_comparacio(token op, arbre<token> b1, arbre<to
 
 arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<token> b2){
 
-  /* Pre: op = OP, b1 = B1 i b2 = B2 ja simplificats */
+  /* Pre: op = OP operador aritmètic, b1 = B1 i b2 = B2 arbres ja simplificats */
   /* Post: intenta simplificar l'operació i retorna l'arbre resultant */
 
   arbre<token> simpl;
@@ -243,32 +256,38 @@ arbre<token> simplificar_operador_aritmetic(token op, arbre<token> b1, arbre<tok
     else if (op == "+")   simpl = arbre<token>(token(b1.arrel().to_int() + b2.arrel().to_int()));
     else if (op == "-")   simpl = arbre<token>(token(b1.arrel().to_int() - b2.arrel().to_int()));
     else if (op == "/")   simpl = arbre<token>(token(b1.arrel().to_int() / b2.arrel().to_int()));
-    else if (op == "**")  simpl = arbre<token>(token((int) pow(b1.arrel().to_int(), b2.arrel().to_int())));
+    else  simpl = arbre<token>(token((int) pow(b1.arrel().to_int(), b2.arrel().to_int())));
+
   } else if (not b1.arrel().es_enter() or not b2.arrel().es_enter()){
     if (op == "*"){
       if (b1.arrel() == "0" or b2.arrel() == "0")   simpl = arbre<token>(token(0));
       else if (b1.arrel() == "1")   simpl = b2;
       else if (b2.arrel() == "1")   simpl = b1;
       else  simpl = arbre<token>(op, b1, b2);
+
     } else if (op == "+"){
       if (b1.arrel() == "0")  simpl = b2;
       else if (b2.arrel() == "0")   simpl = b1;
       else  simpl = arbre<token>(op, b1, b2);
+
     } else if (op == "-"){
       if (b2.arrel() == "0")  simpl = b1;
       else if (equivalents(b1, b2))   simpl = arbre<token>(token(0));
       else  simpl = arbre<token>(op, b1, b2);
+
     } else if (op == "/"){
       if (b1.arrel() == "0")  simpl = arbre<token>(token(0));
       else if (b2.arrel() == "1")  simpl = b1;
       else if (equivalents(b1, b2))   simpl = arbre<token>(token(1));
       else  simpl = arbre<token>(op, b1, b2);
+
     } else if (op == "**"){
       if (b1.arrel() == "0")  simpl = arbre<token>(token(0));
       else if (b1.arrel() == "1")   simpl = arbre<token>(token(1));
       else if (b2.arrel() == "0")   simpl = arbre<token>(token(1));
       else if (b2.arrel() == "1")   simpl = b1;
       else  simpl = arbre<token>(op, b1, b2);
+
     }
   } else simpl = arbre<token>(op, b1, b2);
 
@@ -281,68 +300,35 @@ arbre<token> simplificar(arbre<token> a){
   /* Pre: a = A */
   /* Post: simplifica l'expressió tot el que pot i retorna l'arbre resultant */
 
-  stack<arbre<token> > p;
-  p.push(a);
+  arbre<token> simpl;
+  if (not a.arrel().es_operador_binari() and not a.arrel().es_operador_unari())  simpl = a;
+  else if (a.arrel().es_operador_binari()){
+    arbre<token> simpl_fe = simplificar(a.fe());
+    /* HI1: simpl_fe = "simplificació del fill esquerre d'A" */
+    arbre<token> simpl_fd = simplificar(a.fd());
+    /* HI2: simpl_fd = "simplificació del fill dret d'A" */
 
-  list<arbre<token> > l;
-  while (not p.empty()){
-    /* Inv: a1 = "part d'A que s'està tractant actualment",
-       p = "elements d'A que queden per analitzar" i
-       l = "elements d'A que ja s'han recollit". */
+    if (a.arrel() == "and" or a.arrel() == "or")  simpl = simplificar_operador_boolea(a.arrel(), simpl_fe, simpl_fd);
+    else if (a.arrel() == "==" or a.arrel() == "!=")  simpl = simplificar_operador_comparacio(a.arrel(), simpl_fe, simpl_fd);
+    else  simpl = simplificar_operador_aritmetic(a.arrel(), simpl_fe, simpl_fd);
 
-    arbre<token> a1 = p.top();
-    p.pop();
+  } else {
+    arbre<token> simpl_fe = simplificar(a.fe());
+    /* HI3: simpl_fe = "simplificació del fill esquerre d'A" */
 
-    if (not a1.es_buit()){
-      l.insert(l.begin(), arbre<token>(a1.arrel()));
-      if (not a1.fe().es_buit())  p.push(a1.fe());
-      if (not a1.fd().es_buit())  p.push(a1.fd());
-    }
-
+    simpl = simplificar_operador_unari(a.arrel(), simpl_fe);
   }
 
-  while (not l.empty()){
-    /* Inv: */
+  /* Funció de fita: tamany d'A */
 
-    if (not (*(l.begin())).arrel().es_operador_unari() and not (*(l.begin())).arrel().es_operador_binari()){
-      p.push(*(l.begin()));
-      l.erase(l.begin());
-
-    } else if ((*(l.begin())).arrel().es_operador_binari()){
-      token op = (*(l.begin())).arrel();
-      l.erase(l.begin());
-
-      arbre<token> a1, a2;
-      a1 = p.top();
-      p.pop();
-      a2 = p.top();
-      p.pop();
-
-      if (op == "and" or op == "or")  p.push(simplificar_operador_boolea(op, a2, a1));
-      else if (op == "==" or op == "!=")  p.push(simplificar_operador_comparacio(op, a2, a1));
-      else  p.push(simplificar_operador_aritmetic(op, a2, a1));
-
-    } else {
-      token op = (*(l.begin())).arrel();
-      l.erase(l.begin());
-
-      arbre<token> a1 = p.top();
-      p.pop();
-
-      p.push(simplificar_operador_unari(op, a1));
-
-    }
-
-  }
-
-  return p.top();
+  return simpl;
 
 }
 
 int prioritat_token(token op){
 
-  // Pre: op és un operador aritmétic
-  // Post: retorna la prioritat de l'operador
+  // Pre: op = OP i és un operador aritmétic
+  // Post: retorna la prioritat de l'operador OP
 
   int prioritat;
 
@@ -369,7 +355,10 @@ arbre<token> llegir_infixa(){
 
   token t;
   while(cin >> t and t != "->"){
-    /* Inv: */
+    /* Inv: ops = "operadors que s'han llegit pel canal estandar i encara no s'han tractat",
+       a1 = a2 = "subarbre que s'astà tractant actualment" i
+       res = "arbres parcials de l'expressió infixa" */
+
     if (t == "(")   ops.push(t);
     else if (t == ")"){
       while (ops.top() != "("){
@@ -397,7 +386,11 @@ arbre<token> llegir_infixa(){
     } else if (not t.es_operador_unari() and not t.es_operador_binari())  res.push(arbre<token>(t));
     else {
       while (ops.size() > 0 and ops.top() != "(" and ((prioritat_token(t) < prioritat_token(ops.top())) or (prioritat_token(t) == prioritat_token(ops.top()) and t != "not" and t != "**"))){
-        /* Inv: */
+        /* Inv: op = "operador amb prioritat superior o igual a t",
+           ops = "operadors que s'han llegit pel canal estandar i encara no s'han tractat",
+           a1 = a2 = "subarbre que s'astà tractant actualment" i
+           res = "arbres parcials de l'expressió infixa" */
+
         token op = ops.top();
         ops.pop();
 
@@ -425,7 +418,10 @@ arbre<token> llegir_infixa(){
 
 
   while (not ops.empty()){
-      /* Inv: */
+      /* Inv: ops = "operadors que s'han llegit pel canal estandar i encara no s'han tractat",
+         a1 = a2 = "subarbre que s'astà tractant actualment" i
+         res = "arbres parcials de l'expressió infixa" */
+
     if (ops.top() != "("){
       arbre<token> a1, a2;
 
@@ -460,7 +456,7 @@ int main(){
   while (cin >> form1){
     /* Inv: form1 = "format en que s'ha de llegir l'expressió per generar l'arbre",
        form2 = "format desitjat de sortida",
-       item = "recolliment de -> inservible",
+       item = "recollida de -> inservible",
        a = "arbre generat a partir de l'expressió rebuda en el format de form1" i
        res = "string amb l'expressió en el format de form2" */
 
@@ -480,6 +476,7 @@ int main(){
     if (form2 == "PREFIXA") res = expressio_prefixa(simpl);
     else if (form2 == "POSTFIXA") res = expressio_postfixa(simpl);
     else res = expressio_infixa(simpl);
+
     cout << res << endl;
 
   }
