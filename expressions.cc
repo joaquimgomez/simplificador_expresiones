@@ -327,8 +327,8 @@ arbre<token> simplificar(arbre<token> a){
 
 int prioritat_token(token op){
 
-  // Pre: op = OP i és un operador aritmétic
-  // Post: retorna la prioritat de l'operador OP
+  /* Pre: op = OP i és un operador aritmétic */
+  /* Post: retorna la prioritat de l'operador OP */
 
   int prioritat;
 
@@ -362,7 +362,10 @@ arbre<token> llegir_infixa(){
     if (t == "(")   ops.push(t);
     else if (t == ")"){
       while (ops.top() != "("){
-        /* Inv: */
+        /* Inv: ops = "operadors que s'han llegit pel canal estandar i encara no s'han tractat",
+           res = "arbres parcials de l'expressió infixa" i
+           a1 = a2 = "arbres parcials de l'expressió infixa" */
+
         if (ops.top().es_operador_unari()){
           arbre<token> a1 = res.top();
           res.pop();
