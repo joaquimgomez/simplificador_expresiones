@@ -428,12 +428,14 @@ arbre<token> llegir_infixa(){
       if (ops.top().es_operador_unari()){
         a1 = res.top();
         res.pop();
+        
         res.push(arbre<token>(ops.top(), a1, arbre<token>()));
       } else {
         a1 = res.top();
         res.pop();
         a2 = res.top();
         res.pop();
+
         res.push(arbre<token>(ops.top(), a2, a1));
       }
 
