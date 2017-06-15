@@ -1,8 +1,0 @@
-(a and (b or (not (T and a))))
-and or not and a T b a 
-(((F or a) or b) and (a or (b and b)))
-b b and a or b F a or or and 
-3 5 + x == 3 4 - x * 8 != not or 
-((12 - 9) / ((23 + 5) * -2))
-(((x + 3) + (2 * y)) - ((2 * y) + (3 + x)))
-((x + 12) / (12 + x))
